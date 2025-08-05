@@ -878,3 +878,12 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
       return commonProps;
   }
 }
+
+- **ReactJS 14**
+- **Next.js**
+- **Tailwind CSS**
+- **shadcn/ui**
+- **React DND** (for drag and drop functionality)
+- **Lucide React** (for icons)
+- **Radix UI** (underlying primitives for shadcn/ui components)
+- **React Joyride** for Tour
