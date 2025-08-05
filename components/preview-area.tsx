@@ -12,7 +12,8 @@ interface PreviewAreaProps {
   onSelectSection: (section: Section | null) => void
   onReorderSections: (dragIndex: number, hoverIndex: number) => void
   isPreviewMode: boolean
-  onNavigateToPage: (pageId: string) => void // New prop
+  onNavigateToPage: (pageId: string) => void
+  onDeleteSection: (sectionId: string) => void // New prop for deleting sections
 }
 
 export function PreviewArea({
@@ -21,7 +22,8 @@ export function PreviewArea({
   onSelectSection,
   onReorderSections,
   isPreviewMode,
-  onNavigateToPage, // Destructure new prop
+  onNavigateToPage,
+  onDeleteSection, // Destructure new prop
 }: PreviewAreaProps) {
   const [, drop] = useDrop({
     accept: "section",
@@ -54,7 +56,7 @@ export function PreviewArea({
           .sort((a, b) => a.order - b.order)
           .map((section, index) =>
             isPreviewMode ? (
-              <SectionRenderer key={section.id} section={section} onNavigateToPage={onNavigateToPage} /> // Pass onNavigateToPage
+              <SectionRenderer key={section.id} section={section} onNavigateToPage={onNavigateToPage} />
             ) : (
               <DraggableSection
                 key={section.id}
@@ -63,7 +65,8 @@ export function PreviewArea({
                 isSelected={selectedSection?.id === section.id}
                 onSelect={() => onSelectSection(section)}
                 onReorder={onReorderSections}
-                onNavigateToPage={onNavigateToPage} // Pass onNavigateToPage
+                onNavigateToPage={onNavigateToPage}
+                onDelete={onDeleteSection} // Pass onDeleteSection to DraggableSection
               />
             ),
           )}

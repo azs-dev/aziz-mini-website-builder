@@ -4,7 +4,7 @@ import { useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
 import { SectionRenderer } from "@/components/section-renderer"
 import { Button } from "@/components/ui/button"
-import { GripVertical, Settings } from "lucide-react"
+import { GripVertical, Settings, Trash2 } from "lucide-react"
 import type { Section } from "@/app/page"
 
 interface DraggableSectionProps {
@@ -13,7 +13,8 @@ interface DraggableSectionProps {
   isSelected: boolean
   onSelect: () => void
   onReorder: (dragIndex: number, hoverIndex: number) => void
-  onNavigateToPage: (pageId: string) => void // New prop
+  onNavigateToPage: (pageId: string) => void
+  onDelete: (sectionId: string) => void
 }
 
 export function DraggableSection({
@@ -22,7 +23,8 @@ export function DraggableSection({
   isSelected,
   onSelect,
   onReorder,
-  onNavigateToPage, // Destructure new prop
+  onNavigateToPage,
+  onDelete,
 }: DraggableSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -54,11 +56,14 @@ export function DraggableSection({
   return (
     <div
       ref={ref}
-      className={`relative group transition-all duration-200 ${isDragging ? "opacity-50" : ""} ${
+      className={`relative group transition-all duration-200 animate-fadeIn ${isDragging ? "opacity-50" : ""} ${
         isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""
       }`}
       onClick={onSelect}
     >
+      {/* Overlay for hover effect */}
+      <div className="absolute inset-0 bg-black/15 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[5] rounded-lg"></div>
+
       {/* Drag Handle */}
       <div
         ref={drag}
@@ -70,15 +75,30 @@ export function DraggableSection({
       </div>
 
       {/* Edit Button */}
-      <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute right-10 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button size="sm" variant="secondary" className="h-8 w-8 p-0">
           <Settings className="w-4 h-4" />
         </Button>
       </div>
 
+      {/* Delete Button */}
+      <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button
+          size="sm"
+          variant="destructive"
+          className="h-8 w-8 p-0"
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete(section.id)
+          }}
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      </div>
+
       {/* Section Content */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <SectionRenderer section={section} onNavigateToPage={onNavigateToPage} /> {/* Pass onNavigateToPage */}
+        <SectionRenderer section={section} onNavigateToPage={onNavigateToPage} />
       </div>
 
       {/* Selection Indicator */}

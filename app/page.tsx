@@ -9,8 +9,18 @@ import { SectionLibrary } from "@/components/section-library";
 import { PreviewArea } from "@/components/preview-area";
 import { SectionEditor } from "@/components/section-editor";
 import { Button } from "@/components/ui/button";
-import { Download, Upload, Eye, Code, Plus, Trash2, FileText } from "lucide-react";
-import { toast } from "sonner";
+import {
+  Download,
+  Upload,
+  Eye,
+  Code,
+  Plus,
+  Trash2,
+  FileText,
+  Copy,
+  Pencil,
+  BookOpen,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +28,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
+import Joyride, { type CallBackProps, STATUS, type Step } from "react-joyride";
 
 export interface Section {
   id: string;
@@ -60,9 +72,81 @@ export default function WebsiteBuilder() {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Joyride state
+  const [runTour, setRunTour] = useState(false);
+  const [isClient, setIsClient] = useState(false); // Add this state variable
+  const [tourSteps] = useState<Step[]>([
+    {
+      target: "body",
+      content: "Welcome to the Mini Website Builder! Let's take a quick tour.",
+      placement: "center",
+      disableBeacon: true,
+    },
+    {
+      target: '[data-tut="add-page-button"]',
+      content: "Click here to add a new page to your website.",
+      placement: "bottom",
+    },
+    {
+      target: '[data-tut="page-management-dropdown"]',
+      content:
+        "Manage your pages here: switch between them, rename, duplicate, or delete.",
+      placement: "bottom",
+    },
+    {
+      target: '[data-tut="section-library-sidebar"]',
+      content:
+        "This is your Section Library. Drag and drop sections from here onto your page.",
+      placement: "right",
+    },
+    {
+      target: '[data-tut="preview-area"]',
+      content: "This is your main canvas. See your website come to life here!",
+      placement: "left",
+    },
+    {
+      target: '[data-tut="preview-toggle-button"]',
+      content: "Toggle between Edit mode and Preview mode to see your live site.",
+      placement: "bottom",
+    },
+    {
+      target: '[data-tut="import-button"]',
+      content: "Import existing website designs from a JSON file.",
+      placement: "bottom",
+    },
+    {
+      target: '[data-tut="export-button"]',
+      content: "Export your current website design as a JSON file for backup or sharing.",
+      placement: "bottom",
+    },
+    {
+      target: "body",
+      content: "That's it for the tour! Start building your amazing website now.",
+      placement: "center",
+    },
+  ]);
+
+  useEffect(() => {
+    setIsClient(true);
+    const hasVisitedBefore = localStorage.getItem("first-time-visit");
+    if (hasVisitedBefore === null || hasVisitedBefore === "true") {
+      setRunTour(true);
+      localStorage.setItem("first-time-visit", "true");
+    } else {
+      setRunTour(false);
+    }
+  }, []);
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status }: any = data;
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      setRunTour(false);
+      localStorage.setItem("first-time-visit", "false");
+    }
+  };
+
   const currentPage = pages.find((p) => p.id === currentPageId);
 
-  // Update selected section if current page changes or section is deleted
   useEffect(() => {
     if (
       selectedSection &&
@@ -88,11 +172,14 @@ export default function WebsiteBuilder() {
           return page;
         })
       );
-      toast("Section Added", {
-        description: `${
+      toast.success(
+        `${
           type.charAt(0).toUpperCase() + type.slice(1)
         } section has been added to your page.`,
-      });
+        {
+          description: "Section Added",
+        }
+      );
     },
     [currentPageId]
   );
@@ -112,6 +199,9 @@ export default function WebsiteBuilder() {
           return page;
         })
       );
+      toast.info("Section Updated", {
+        description: "The section properties have been saved.",
+      });
     },
     [currentPageId]
   );
@@ -130,7 +220,7 @@ export default function WebsiteBuilder() {
         })
       );
       setSelectedSection(null);
-      toast("Section Deleted", {
+      toast.error("Section Deleted", {
         description: "The section has been removed from your page.",
       });
     },
@@ -170,28 +260,77 @@ export default function WebsiteBuilder() {
     };
     setPages((prevPages) => [...prevPages, newPage]);
     setCurrentPageId(newPageId);
-    toast("Page Added", {
+    toast.success("Page Added", {
       description: `New page "${newPage.name}" created.`,
     });
   }, [pages.length]);
 
+  const renamePage = useCallback(
+    (pageId: string) => {
+      const pageToRename = pages.find((p) => p.id === pageId);
+      if (pageToRename) {
+        const newName = prompt(
+          `Enter new name for "${pageToRename.name}":`,
+          pageToRename.name
+        );
+        if (newName && newName.trim() !== "") {
+          setPages((prevPages) =>
+            prevPages.map((page) =>
+              page.id === pageId ? { ...page, name: newName.trim() } : page
+            )
+          );
+          toast.success("Page Renamed", {
+            description: `Page "${pageToRename.name}" renamed to "${newName.trim()}".`,
+          });
+        } else if (newName !== null) {
+          toast.error("Rename Failed", {
+            description: "Page name cannot be empty.",
+          });
+        }
+      }
+    },
+    [pages]
+  );
+
+  const duplicatePage = useCallback(
+    (pageId: string) => {
+      const pageToDuplicate = pages.find((p) => p.id === pageId);
+      if (pageToDuplicate) {
+        const newPageId = `page-${Date.now()}-copy`;
+        const duplicatedPage: Page = {
+          ...pageToDuplicate,
+          id: newPageId,
+          name: `${pageToDuplicate.name} (Copy)`,
+          sections: pageToDuplicate.sections.map((section) => ({
+            ...section,
+            id: `${section.type}-${Date.now()}-${Math.random()
+              .toString(36)
+              .substring(7)}`,
+          })),
+        };
+        setPages((prevPages) => [...prevPages, duplicatedPage]);
+        setCurrentPageId(newPageId);
+        toast.success("Page Duplicated", {
+          description: `Page "${pageToDuplicate.name}" duplicated as "${duplicatedPage.name}".`,
+        });
+      }
+    },
+    [pages]
+  );
+
   const deletePage = useCallback(
     (pageId: string) => {
       if (pages.length === 1) {
-        toast("Cannot Delete Last Page", {
+        toast.error("Cannot Delete Page", {
           description: "You must have at least one page in your project.",
-          action: {
-            label: "Undo",
-            onClick: () => console.log("Undo"),
-          },
         });
         return;
       }
       setPages((prevPages) => prevPages.filter((page) => page.id !== pageId));
       if (currentPageId === pageId) {
-        setCurrentPageId(pages[0].id); // Switch to the first remaining page
+        setCurrentPageId(pages[0].id);
       }
-      toast("Page Deleted", {
+      toast.error("Page Deleted", {
         description: "The page has been removed from your project.",
       });
     },
@@ -200,7 +339,7 @@ export default function WebsiteBuilder() {
 
   const exportDesign = useCallback(() => {
     const design = {
-      pages, // Export all pages
+      pages,
       timestamp: new Date().toISOString(),
       version: "1.0",
     };
@@ -215,7 +354,7 @@ export default function WebsiteBuilder() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    toast("Design Exported", {
+    toast.success("Design Exported", {
       description: "Your website design has been downloaded as a JSON file.",
     });
   }, [pages]);
@@ -230,21 +369,17 @@ export default function WebsiteBuilder() {
         const design = JSON.parse(e.target?.result as string);
         if (design.pages && Array.isArray(design.pages)) {
           setPages(design.pages);
-          setCurrentPageId(design.pages[0]?.id || "home"); // Set first page as current
+          setCurrentPageId(design.pages[0]?.id || "home");
           setSelectedSection(null);
-          toast("Design Imported", {
+          toast.success("Design Imported", {
             description: "Your website design has been successfully loaded.",
           });
         } else {
           throw new Error("Invalid file format");
         }
       } catch (error) {
-        toast("Import Failed", {
+        toast.error("Import Failed", {
           description: "The selected file is not a valid design configuration.",
-          action: {
-            label: "Undo",
-            onClick: () => console.log("Undo"),
-          },
         });
       }
     };
@@ -253,13 +388,28 @@ export default function WebsiteBuilder() {
   }, []);
 
   if (!currentPage) {
-    return <div>Loading...</div>; // Or a more robust loading state
+    return <div>Loading...</div>;
   }
 
   return (
     <DndProvider backend={HTML5Backend}>
+      {isClient && (
+        <Joyride
+          run={runTour}
+          steps={tourSteps}
+          continuous
+          showProgress
+          showSkipButton
+          callback={handleJoyrideCallback}
+          disableOverlayClose={true}
+          styles={{
+            options: {
+              zIndex: 10000,
+            },
+          }}
+        />
+      )}
       <div className='h-screen flex flex-col bg-gray-50'>
-        {/* Header */}
         <header className='bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between'>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center'>
@@ -269,13 +419,34 @@ export default function WebsiteBuilder() {
           </div>
 
           <div className='flex items-center gap-2'>
-            {/* Page Management */}
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => setRunTour(true)}
+              className='flex items-center gap-2 bg-transparent'
+            >
+              <BookOpen className='w-4 h-4' />
+              Tour
+            </Button>
+
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={addPage}
+              className='flex items-center gap-2 bg-transparent'
+              data-tut='add-page-button' // Joyride target
+            >
+              <Plus className='w-4 h-4' />
+              Add Page
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='outline'
                   size='sm'
                   className='flex items-center gap-2 bg-transparent'
+                  data-tut='page-management-dropdown' // Joyride target
                 >
                   <FileText className='w-4 h-4' />
                   {currentPage.name}
@@ -291,9 +462,13 @@ export default function WebsiteBuilder() {
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={addPage}>
-                  <Plus className='w-4 h-4 mr-2' />
-                  Add New Page
+                <DropdownMenuItem onClick={() => renamePage(currentPageId)}>
+                  <Pencil className='w-4 h-4 mr-2' />
+                  Rename Current Page
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => duplicatePage(currentPageId)}>
+                  <Copy className='w-4 h-4 mr-2' />
+                  Duplicate Current Page
                 </DropdownMenuItem>
                 {pages.length > 1 && (
                   <DropdownMenuItem
@@ -312,6 +487,7 @@ export default function WebsiteBuilder() {
               size='sm'
               onClick={() => setIsPreviewMode(!isPreviewMode)}
               className='flex items-center gap-2'
+              data-tut='preview-toggle-button' // Joyride target
             >
               <Eye className='w-4 h-4' />
               {isPreviewMode ? "Edit" : "Preview"}
@@ -321,6 +497,7 @@ export default function WebsiteBuilder() {
               size='sm'
               onClick={() => fileInputRef.current?.click()}
               className='flex items-center gap-2'
+              data-tut='import-button' // Joyride target
             >
               <Upload className='w-4 h-4' />
               Import
@@ -330,6 +507,7 @@ export default function WebsiteBuilder() {
               size='sm'
               onClick={exportDesign}
               className='flex items-center gap-2 bg-transparent'
+              data-tut='export-button' // Joyride target
             >
               <Download className='w-4 h-4' />
               Export
@@ -338,38 +516,44 @@ export default function WebsiteBuilder() {
         </header>
 
         <div className='flex-1 flex overflow-hidden'>
-          {!isPreviewMode && (
-            <>
-              {/* Section Library Sidebar */}
-              <div className='w-80 bg-white border-r border-gray-200 flex flex-col'>
-                <SectionLibrary onAddSection={addSection} />
-              </div>
+          <div
+            className={`bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out ${
+              isPreviewMode ? "w-0 overflow-hidden" : "w-80"
+            }`}
+            data-tut='section-library-sidebar' // Joyride target
+          >
+            <SectionLibrary onAddSection={addSection} />
+          </div>
 
-              {/* Section Editor Sidebar */}
-              {selectedSection && (
-                <div className='w-80 bg-white border-r border-gray-200'>
-                  <SectionEditor
-                    section={selectedSection}
-                    onUpdate={updateSection}
-                    onDelete={deleteSection}
-                    onClose={() => setSelectedSection(null)}
-                    pages={pages} // Pass pages for linking
-                    onNavigateToPage={setCurrentPageId} // Pass function to navigate
-                  />
-                </div>
-              )}
-            </>
-          )}
+          <div
+            className={`bg-white border-r border-gray-200 transition-all duration-300 ease-in-out ${
+              selectedSection && !isPreviewMode ? "w-80" : "w-0 overflow-hidden"
+            }`}
+            data-tut='section-editor-sidebar' // Joyride target (will only show if a section is selected)
+          >
+            {selectedSection && (
+              <SectionEditor
+                section={selectedSection}
+                onUpdate={updateSection}
+                onDelete={deleteSection}
+                onClose={() => setSelectedSection(null)}
+                pages={pages}
+                onNavigateToPage={setCurrentPageId}
+              />
+            )}
+          </div>
 
-          {/* Preview Area */}
-          <div className='flex-1 overflow-auto'>
+          <div className='flex-1 overflow-auto' data-tut='preview-area'>
+            {" "}
+            {/*Joyride target */}
             <PreviewArea
-              sections={currentPage.sections} // Use current page's sections
+              sections={currentPage.sections}
               selectedSection={selectedSection}
               onSelectSection={setSelectedSection}
               onReorderSections={reorderSections}
               isPreviewMode={isPreviewMode}
-              onNavigateToPage={setCurrentPageId} // Pass onNavigateToPage to PreviewArea
+              onNavigateToPage={setCurrentPageId}
+              onDeleteSection={deleteSection}
             />
           </div>
         </div>
@@ -387,18 +571,22 @@ export default function WebsiteBuilder() {
 }
 
 function getDefaultProps(type: Section["type"]): Record<string, any> {
+  const commonProps = {
+    backgroundColor: "#ffffff",
+    textColor: "#1f2937",
+  };
+
   switch (type) {
     case "header":
       return {
         title: "Your Brand",
         navigation: [
-          { label: "Home", link: "home" },
+          { label: "Home", link: "#" },
           { label: "About", link: "#" },
           { label: "Services", link: "#" },
           { label: "Contact", link: "#" },
         ],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "hero":
       return {
@@ -407,8 +595,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
         buttonText: "Get Started",
         buttonLink: "#",
         backgroundImage: "/placeholder.svg?height=600&width=1200",
-        backgroundColor: "#1f2937",
-        textColor: "#ffffff",
+        ...commonProps,
       };
     case "about":
       return {
@@ -422,8 +609,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
           { number: "1000+", label: "Projects Completed" },
           { number: "50+", label: "Team Members" },
         ],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "services":
       return {
@@ -465,8 +651,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
           { title: "Responsive Design", description: "Works on all devices", icon: "📱" },
           { title: "24/7 Support", description: "Always here to help", icon: "🛟" },
         ],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "pricing":
       return {
@@ -508,8 +693,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
             popular: false,
           },
         ],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "testimonials":
       return {
@@ -567,8 +751,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
             title: "Web Application",
           },
         ],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "faq":
       return {
@@ -622,8 +805,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
           address: "123 Business St, Suite 100, City, State 12345",
         },
         formFields: ["name", "email", "subject", "message"],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "newsletter":
       return {
@@ -668,8 +850,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
             readTime: "12 min read",
           },
         ],
-        backgroundColor: "#ffffff",
-        textColor: "#1f2937",
+        ...commonProps,
       };
     case "cta":
       return {
@@ -694,6 +875,6 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
         textColor: "#ffffff",
       };
     default:
-      return {};
+      return commonProps;
   }
 }

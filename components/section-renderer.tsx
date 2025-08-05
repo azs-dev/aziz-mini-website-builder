@@ -21,15 +21,17 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
   const { type, props } = section
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, link: string) => {
-    if (link.startsWith("http://") || link.startsWith("https://") || link.startsWith("#")) {
-      // External URL or anchor link within the same page
-      // For now, we'll just prevent default if it's an internal anchor
-      if (link.length > 1 && link.startsWith("#")) {
-        e.preventDefault()
-        // In a real app, you'd scroll to the section with this ID
-        console.log(`Scrolling to section: ${link}`)
-      }
-      // For external URLs, let the default behavior happen
+    if (!link || link === "#") {
+      // Check for empty string or "#"
+      e.preventDefault()
+      e.stopPropagation() // Prevent event from bubbling up
+      console.log("Link leads to nowhere (default behavior prevented).")
+      return
+    }
+
+    if (link.startsWith("http://") || link.startsWith("https://")) {
+      // External URL, let default behavior happen (open in new tab or navigate)
+      return
     } else if (onNavigateToPage) {
       // Assume it's a page ID if it's not an external URL or anchor
       e.preventDefault()
