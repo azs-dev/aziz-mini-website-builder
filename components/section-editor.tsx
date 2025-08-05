@@ -1,23 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
+
+import { useState, useEffect } from "react" // Import useEffect
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { X, Trash2, Plus, Minus } from "lucide-react"
-import type { Section } from "@/app/page"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import type { Section, Page } from "@/app/page"
 
 interface SectionEditorProps {
   section: Section
   onUpdate: (id: string, props: Record<string, any>) => void
   onDelete: (id: string) => void
   onClose: () => void
+  pages: Page[] // New prop: list of all pages
+  onNavigateToPage: (pageId: string) => void // New prop: function to navigate to a page
 }
 
-export function SectionEditor({ section, onUpdate, onDelete, onClose }: SectionEditorProps) {
+export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onNavigateToPage }: SectionEditorProps) {
   const [props, setProps] = useState(section.props)
+
+  // Effect to update internal 'props' state when 'section.props' changes
+  useEffect(() => {
+    setProps(section.props)
+  }, [section.props])
 
   const handleUpdate = (key: string, value: any) => {
     const newProps = { ...props, [key]: value }
@@ -53,26 +63,53 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose }: SectionE
             </div>
             <div>
               <Label>Navigation Items</Label>
-              {props.navigation?.map((item: string, index: number) => (
-                <div key={index} className="flex gap-2 mt-2">
+              {props.navigation?.map((item: { label: string; link: string }, index: number) => (
+                <div key={index} className="border rounded-lg p-3 mt-2 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">Item {index + 1}</span>
+                    <Button size="sm" variant="outline" onClick={() => handleArrayRemove("navigation", index)}>
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                  </div>
                   <Input
-                    value={item}
-                    onChange={(e) => {
-                      const nav = [...props.navigation]
-                      nav[index] = e.target.value
-                      handleUpdate("navigation", nav)
-                    }}
+                    placeholder="Label"
+                    value={item.label || ""}
+                    onChange={(e) => handleArrayUpdate("navigation", index, "label", e.target.value)}
                   />
-                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("navigation", index)}>
-                    <Minus className="w-4 h-4" />
-                  </Button>
+                  <Select
+                    value={pages.some((p) => p.id === item.link) ? item.link : "external"} // Check if link is a page ID
+                    onValueChange={(value) =>
+                      handleArrayUpdate("navigation", index, "link", value === "external" ? "#" : value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Link to..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="external">External URL</SelectItem>
+                      <DropdownMenuSeparator />
+                      {pages.map((page) => (
+                        <SelectItem key={page.id} value={page.id}>
+                          Page: {page.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {(!pages.some((p) => p.id === item.link) || item.link === "#") && ( // Show input if not a page ID or is '#'
+                    <Input
+                      placeholder="External URL (e.g., #services or https://example.com)"
+                      value={item.link || ""}
+                      onChange={(e) => handleArrayUpdate("navigation", index, "link", e.target.value)}
+                      className="mt-2"
+                    />
+                  )}
                 </div>
               ))}
               <Button
                 size="sm"
                 variant="outline"
                 className="mt-2 bg-transparent"
-                onClick={() => handleArrayAdd("navigation", "New Item")}
+                onClick={() => handleArrayAdd("navigation", { label: "New Item", link: "#" })}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Item
@@ -103,6 +140,34 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose }: SectionE
                 value={props.buttonText || ""}
                 onChange={(e) => handleUpdate("buttonText", e.target.value)}
               />
+            </div>
+            <div>
+              <Label htmlFor="buttonLink">Button Link</Label>
+              <Select
+                value={pages.some((p) => p.id === props.buttonLink) ? props.buttonLink : "external"} // Check if link is a page ID
+                onValueChange={(value) => handleUpdate("buttonLink", value === "external" ? "#" : value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Link to..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="external">External URL</SelectItem>
+                  <DropdownMenuSeparator />
+                  {pages.map((page) => (
+                    <SelectItem key={page.id} value={page.id}>
+                      Page: {page.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {(!pages.some((p) => p.id === props.buttonLink) || props.buttonLink === "#") && ( // Show input if not a page ID or is '#'
+                <Input
+                  placeholder="External URL (e.g., #contact or https://example.com)"
+                  value={props.buttonLink || ""}
+                  onChange={(e) => handleUpdate("buttonLink", e.target.value)}
+                  className="mt-2"
+                />
+              )}
             </div>
             <div>
               <Label htmlFor="backgroundImage">Background Image URL</Label>
@@ -167,6 +232,56 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose }: SectionE
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Feature
+              </Button>
+            </div>
+          </div>
+        )
+
+      case "faq": // Added specific editor for FAQ section
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="title">Title</Label>
+              <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Input
+                id="subtitle"
+                value={props.subtitle || ""}
+                onChange={(e) => handleUpdate("subtitle", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>FAQs</Label>
+              {props.faqs?.map((faq: any, index: number) => (
+                <div key={index} className="border rounded-lg p-3 mt-2 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">FAQ {index + 1}</span>
+                    <Button size="sm" variant="outline" onClick={() => handleArrayRemove("faqs", index)}>
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    placeholder="Question"
+                    value={faq.question || ""}
+                    onChange={(e) => handleArrayUpdate("faqs", index, "question", e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Answer"
+                    value={faq.answer || ""}
+                    onChange={(e) => handleArrayUpdate("faqs", index, "answer", e.target.value)}
+                  />
+                </div>
+              ))}
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-2 bg-transparent"
+                onClick={() => handleArrayAdd("faqs", { question: "New Question", answer: "New Answer" })}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add FAQ
               </Button>
             </div>
           </div>

@@ -2,10 +2,43 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Layout, Zap, Star, MessageSquare, Target, Anchor } from "lucide-react"
+import {
+  Plus,
+  Layout,
+  Zap,
+  Star,
+  MessageSquare,
+  Target,
+  Anchor,
+  Users,
+  DollarSign,
+  ImageIcon,
+  HelpCircle,
+  BarChart3,
+  Phone,
+  Newspaper,
+  PenTool,
+} from "lucide-react"
 
 interface SectionLibraryProps {
-  onAddSection: (type: "header" | "hero" | "features" | "testimonials" | "cta" | "footer") => void
+  onAddSection: (
+    type:
+      | "header"
+      | "hero"
+      | "features"
+      | "testimonials"
+      | "cta"
+      | "footer"
+      | "about"
+      | "pricing"
+      | "contact"
+      | "gallery"
+      | "faq"
+      | "newsletter"
+      | "services"
+      | "stats"
+      | "blog",
+  ) => void
 }
 
 const sectionTypes = [
@@ -15,6 +48,7 @@ const sectionTypes = [
     description: "Navigation bar with logo and menu items",
     icon: Layout,
     preview: "Logo + Navigation",
+    category: "Navigation",
   },
   {
     type: "hero" as const,
@@ -22,13 +56,39 @@ const sectionTypes = [
     description: "Eye-catching banner with call-to-action",
     icon: Zap,
     preview: "Title + Subtitle + Button",
+    category: "Hero",
+  },
+  {
+    type: "about" as const,
+    title: "About Us",
+    description: "Company story with stats and image",
+    icon: Users,
+    preview: "Story + Stats + Image",
+    category: "Content",
+  },
+  {
+    type: "services" as const,
+    title: "Services",
+    description: "Showcase your services with features",
+    icon: Star,
+    preview: "Service Cards + Features",
+    category: "Content",
   },
   {
     type: "features" as const,
     title: "Features",
-    description: "Showcase your key features and benefits",
+    description: "Highlight key features and benefits",
     icon: Star,
     preview: "Feature Grid Layout",
+    category: "Content",
+  },
+  {
+    type: "pricing" as const,
+    title: "Pricing",
+    description: "Pricing plans and packages",
+    icon: DollarSign,
+    preview: "Pricing Cards",
+    category: "Commerce",
   },
   {
     type: "testimonials" as const,
@@ -36,6 +96,55 @@ const sectionTypes = [
     description: "Customer reviews and social proof",
     icon: MessageSquare,
     preview: "Customer Reviews",
+    category: "Social Proof",
+  },
+  {
+    type: "gallery" as const,
+    title: "Gallery",
+    description: "Image gallery or portfolio showcase",
+    icon: ImageIcon,
+    preview: "Image Grid",
+    category: "Media",
+  },
+  {
+    type: "stats" as const,
+    title: "Statistics",
+    description: "Numbers and achievements showcase",
+    icon: BarChart3,
+    preview: "Number Counters",
+    category: "Social Proof",
+  },
+  {
+    type: "faq" as const,
+    title: "FAQ",
+    description: "Frequently asked questions",
+    icon: HelpCircle,
+    preview: "Q&A Accordion",
+    category: "Support",
+  },
+  {
+    type: "blog" as const,
+    title: "Blog/News",
+    description: "Latest articles and news posts",
+    icon: PenTool,
+    preview: "Article Cards",
+    category: "Content",
+  },
+  {
+    type: "contact" as const,
+    title: "Contact",
+    description: "Contact form and information",
+    icon: Phone,
+    preview: "Form + Contact Info",
+    category: "Contact",
+  },
+  {
+    type: "newsletter" as const,
+    title: "Newsletter",
+    description: "Email subscription signup",
+    icon: Newspaper,
+    preview: "Email Signup Form",
+    category: "Marketing",
   },
   {
     type: "cta" as const,
@@ -43,6 +152,7 @@ const sectionTypes = [
     description: "Encourage users to take action",
     icon: Target,
     preview: "Action Button Section",
+    category: "Marketing",
   },
   {
     type: "footer" as const,
@@ -50,6 +160,7 @@ const sectionTypes = [
     description: "Bottom section with links and info",
     icon: Anchor,
     preview: "Links + Copyright",
+    category: "Navigation",
   },
 ]
 
@@ -85,6 +196,7 @@ export function SectionLibrary({ onAddSection }: SectionLibraryProps) {
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="bg-gray-50 rounded-md p-2 text-xs text-gray-600 text-center">{section.preview}</div>
+                  <div className="mt-1 text-xs text-blue-600 font-medium">{section.category}</div>
                 </CardContent>
               </Card>
             )

@@ -13,9 +13,17 @@ interface DraggableSectionProps {
   isSelected: boolean
   onSelect: () => void
   onReorder: (dragIndex: number, hoverIndex: number) => void
+  onNavigateToPage: (pageId: string) => void // New prop
 }
 
-export function DraggableSection({ section, index, isSelected, onSelect, onReorder }: DraggableSectionProps) {
+export function DraggableSection({
+  section,
+  index,
+  isSelected,
+  onSelect,
+  onReorder,
+  onNavigateToPage, // Destructure new prop
+}: DraggableSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   const [{ isDragging }, drag, preview] = useDrag({
@@ -70,7 +78,7 @@ export function DraggableSection({ section, index, isSelected, onSelect, onReord
 
       {/* Section Content */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <SectionRenderer section={section} />
+        <SectionRenderer section={section} onNavigateToPage={onNavigateToPage} /> {/* Pass onNavigateToPage */}
       </div>
 
       {/* Selection Indicator */}
