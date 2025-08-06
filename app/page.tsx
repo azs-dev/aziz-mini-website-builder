@@ -422,16 +422,6 @@ export default function WebsiteBuilder() {
             <Button
               variant='outline'
               size='sm'
-              onClick={() => setRunTour(true)}
-              className='flex items-center gap-2 bg-transparent'
-            >
-              <BookOpen className='w-4 h-4' />
-              Tour
-            </Button>
-
-            <Button
-              variant='outline'
-              size='sm'
               onClick={addPage}
               className='flex items-center gap-2 bg-transparent'
               data-tut='add-page-button' // Joyride target

@@ -880,59 +880,79 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
           </div>
         </div>
       )
-    case "footer":
-      return (
-        <div className="space-y-6">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input
-              id="companyName"
-              value={props.companyName || ""}
-              onChange={(e) => handleUpdate("companyName", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={props.description || ""}
-              onChange={(e) => handleUpdate("description", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>Links</Label>
-            {props.links?.map((link: any, index: number) => (
-              <div key={index} className="border border-gray-300 shadow-sm my-2 flex flex-col gap-2 py-4 rounded-lg p-3 mt-2 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">Link {index + 1}</span>
-                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("links", index)}>
-                    <Minus className="w-4 h-4" />
-                  </Button>
+      case "footer":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Input
+                id="companyName"
+                value={props.companyName || ""}
+                onChange={(e) => handleUpdate("companyName", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={props.description || ""}
+                onChange={(e) => handleUpdate("description", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label>Links</Label>
+              {props.links?.map((link: any, index: number) => (
+                <div key={index} className="border rounded-lg shadow-sm border-gray-300 py-4 my-2 p-3 mt-2 space-y-2">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="font-medium">Link {index + 1}</span>
+                    <Button size="sm" variant="outline" onClick={() => handleArrayRemove("links", index)}>
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    placeholder="Title"
+                    value={link.title || ""}
+                    onChange={(e) => handleArrayUpdate("links", index, "title", e.target.value)}
+                  />
+                  <Select
+                    value={pages.some((p) => p.id === link.url) ? link.url : "external"}
+                    onValueChange={(value) => handleArrayUpdate("links", index, "url", value === "external" ? "#" : value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Link to..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="external">External URL</SelectItem>
+                      <DropdownMenuSeparator />
+                      {pages.map((page) => (
+                        <SelectItem key={page.id} value={page.id}>
+                          Page: {page.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {(!pages.some((p) => p.id === link.url) || link.url === "#") && (
+                    <Input
+                      placeholder="External URL (e.g., #contact or https://example.com)"
+                      value={link.url || ""}
+                      onChange={(e) => handleArrayUpdate("links", index, "url", e.target.value)}
+                      className="mt-2"
+                    />
+                  )}
                 </div>
-                <Input
-                  placeholder="Title"
-                  value={link.title || ""}
-                  onChange={(e) => handleArrayUpdate("links", index, "title", e.target.value)}
-                />
-                <Input
-                  placeholder="URL"
-                  value={link.url || ""}
-                  onChange={(e) => handleArrayUpdate("links", index, "url", e.target.value)}
-                />
-              </div>
-            ))}
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-2 bg-transparent"
-              onClick={() => handleArrayAdd("links", { title: "New Link", url: "#" })}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Link
-            </Button>
+              ))}
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-2 bg-transparent"
+                onClick={() => handleArrayAdd("links", { title: "New Link", url: "#" })}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Link
+              </Button>
+            </div>
           </div>
-        </div>
-      )
+        )
 
       default:
         return (

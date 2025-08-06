@@ -36,6 +36,13 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
     }
   }
 
+  const getLinkHref = (link: string) => {
+    if (link.startsWith("http://") || link.startsWith("https://")) {
+      return "#" // For external links, use # and rely on onClick
+    }
+    return link // For internal links, use the actual link (page ID or anchor)
+  }
+
   switch (type) {
     case "header":
       return (
@@ -453,7 +460,12 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
               <div>
                 <div className="flex flex-wrap gap-6">
                   {props.links?.map((link: { title: string; url: string }, index: number) => (
-                    <a key={index} href={link.url} className="hover:opacity-75 transition-opacity">
+                    <a
+                    key={index}
+                    href={getLinkHref(link.url)} // Use helper function for href
+                    onClick={(e) => handleLinkClick(e, link.url)}
+                    className="hover:opacity-75 transition-opacity"
+                  >
                       {link.title}
                     </a>
                   ))}
