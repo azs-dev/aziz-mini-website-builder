@@ -21,21 +21,18 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
   const { type, props } = section
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, link: string) => {
+    e.preventDefault() // Always prevent default to handle navigation manually
+
     if (!link || link === "#") {
-      // Check for empty string or "#"
-      e.preventDefault()
       e.stopPropagation() // Prevent event from bubbling up
       console.log("Link leads to nowhere (default behavior prevented).")
       return
     }
 
     if (link.startsWith("http://") || link.startsWith("https://")) {
-      // External URL, let default behavior happen (open in new tab or navigate)
-      return
+      window.open(link, '_blank', 'noopener,noreferrer'); // Open external links in new tab
     } else if (onNavigateToPage) {
-      // Assume it's a page ID if it's not an external URL or anchor
-      e.preventDefault()
-      onNavigateToPage(link)
+      onNavigateToPage(link) // Navigate to internal pages
     }
   }
 

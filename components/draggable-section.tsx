@@ -62,7 +62,7 @@ export function DraggableSection({
       onClick={onSelect}
     >
       {/* Overlay for hover effect */}
-      <div className="absolute inset-0 bg-black/15 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[5] rounded-lg"></div>
+      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[5] rounded-lg"></div>
 
       {/* Drag Handle */}
       <div

@@ -520,7 +520,7 @@ export default function WebsiteBuilder() {
             className={`bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out ${
               isPreviewMode ? "w-0 overflow-hidden" : "w-80"
             }`}
-            data-tut='section-library-sidebar' // Joyride target
+            data-tut='section-library-sidebar'
           >
             <SectionLibrary onAddSection={addSection} />
           </div>
@@ -529,7 +529,7 @@ export default function WebsiteBuilder() {
             className={`bg-white border-r border-gray-200 transition-all duration-300 ease-in-out ${
               selectedSection && !isPreviewMode ? "w-80" : "w-0 overflow-hidden"
             }`}
-            data-tut='section-editor-sidebar' // Joyride target (will only show if a section is selected)
+            data-tut='section-editor-sidebar'
           >
             {selectedSection && (
               <SectionEditor
@@ -545,7 +545,6 @@ export default function WebsiteBuilder() {
 
           <div className='flex-1 overflow-auto' data-tut='preview-area'>
             {" "}
-            {/*Joyride target */}
             <PreviewArea
               sections={currentPage.sections}
               selectedSection={selectedSection}
@@ -879,6 +878,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
   }
 }
 
+/*
 - **ReactJS 14**
 - **Next.js**
 - **Tailwind CSS**
@@ -887,3 +887,4 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
 - **Lucide React** (for icons)
 - **Radix UI** (underlying primitives for shadcn/ui components)
 - **React Joyride** for Tour
+*/

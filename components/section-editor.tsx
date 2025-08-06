@@ -17,14 +17,13 @@ interface SectionEditorProps {
   onUpdate: (id: string, props: Record<string, any>) => void
   onDelete: (id: string) => void
   onClose: () => void
-  pages: Page[] // New prop: list of all pages
-  onNavigateToPage: (pageId: string) => void // New prop: function to navigate to a page
+  pages: Page[] 
+  onNavigateToPage: (pageId: string) => void
 }
 
 export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onNavigateToPage }: SectionEditorProps) {
   const [props, setProps] = useState(section.props)
 
-  // Effect to update internal 'props' state when 'section.props' changes
   useEffect(() => {
     setProps(section.props)
   }, [section.props])
@@ -56,12 +55,12 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
     switch (section.type) {
       case "header":
         return (
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="title">Brand Name</Label>
               <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label>Navigation Items</Label>
               {props.navigation?.map((item: { label: string; link: string }, index: number) => (
                 <div key={index} className="border rounded-lg p-3 mt-2 space-y-2">
@@ -77,7 +76,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                     onChange={(e) => handleArrayUpdate("navigation", index, "label", e.target.value)}
                   />
                   <Select
-                    value={pages.some((p) => p.id === item.link) ? item.link : "external"} // Check if link is a page ID
+                    value={pages.some((p) => p.id === item.link) ? item.link : "external"} 
                     onValueChange={(value) =>
                       handleArrayUpdate("navigation", index, "link", value === "external" ? "#" : value)
                     }
@@ -120,12 +119,12 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
 
       case "hero":
         return (
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="title">Title</Label>
               <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="subtitle">Subtitle</Label>
               <Textarea
                 id="subtitle"
@@ -133,7 +132,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 onChange={(e) => handleUpdate("subtitle", e.target.value)}
               />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="buttonText">Button Text</Label>
               <Input
                 id="buttonText"
@@ -141,7 +140,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 onChange={(e) => handleUpdate("buttonText", e.target.value)}
               />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="buttonLink">Button Link</Label>
               <Select
                 value={pages.some((p) => p.id === props.buttonLink) ? props.buttonLink : "external"} // Check if link is a page ID
@@ -169,7 +168,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 />
               )}
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="backgroundImage">Background Image URL</Label>
               <Input
                 id="backgroundImage"
@@ -182,12 +181,12 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
 
       case "features":
         return (
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="title">Title</Label>
               <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="subtitle">Subtitle</Label>
               <Input
                 id="subtitle"
@@ -195,7 +194,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 onChange={(e) => handleUpdate("subtitle", e.target.value)}
               />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label>Features</Label>
               {props.features?.map((feature: any, index: number) => (
                 <div key={index} className="border rounded-lg p-3 mt-2 space-y-2">
@@ -237,14 +236,14 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
           </div>
         )
 
-      case "faq": // Added specific editor for FAQ section
-        return (
-          <div className="space-y-4">
-            <div>
+      case "faq": 
+              return (
+          <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="title">Title</Label>
               <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label htmlFor="subtitle">Subtitle</Label>
               <Input
                 id="subtitle"
@@ -252,7 +251,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 onChange={(e) => handleUpdate("subtitle", e.target.value)}
               />
             </div>
-            <div>
+            <div className="flex gap-2 flex-col">
               <Label>FAQs</Label>
               {props.faqs?.map((faq: any, index: number) => (
                 <div key={index} className="border rounded-lg p-3 mt-2 space-y-2">
@@ -287,6 +286,654 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
           </div>
         )
 
+        case "about":
+      return (
+        <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Textarea
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={props.description || ""}
+              onChange={(e) => handleUpdate("description", e.target.value)}
+            />
+          </div>
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="image">Image URL</Label>
+            <Input id="image" value={props.image || ""} onChange={(e) => handleUpdate("image", e.target.value)} />
+          </div>
+          <div>
+            <Label>Stats</Label>
+            {(Array.isArray(props.stats) ? props.stats : []).map((stat: any, index: number) => (
+              <div key={index} className="border rounded-lg p-3 mt-2 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Stat {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("stats", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Number"
+                  value={stat.number || ""}
+                  onChange={(e) => handleArrayUpdate("stats", index, "number", e.target.value)}
+                />
+                <Input
+                  placeholder="Label"
+                  value={stat.label || ""}
+                  onChange={(e) => handleArrayUpdate("stats", index, "label", e.target.value)}
+                />
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() => handleArrayAdd("stats", { number: "0", label: "New Stat" })}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Stat
+            </Button>
+          </div>
+        </div>
+      )
+    case "services":
+      return (
+        <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Input
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+            <div className="flex gap-2 py-4 flex-col">
+            <Label>Services</Label>
+            {props.services?.map((service: any, index: number) => (
+              <div key={index} className="border border-gray-300 rounded-lg p-3 mt-2 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Service {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("services", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Icon (emoji)"
+                  value={service.icon || ""}
+                  onChange={(e) => handleArrayUpdate("services", index, "icon", e.target.value)}
+                />
+                <Input
+                  placeholder="Title"
+                  value={service.title || ""}
+                  onChange={(e) => handleArrayUpdate("services", index, "title", e.target.value)}
+                />
+                <Textarea
+                  placeholder="Description"
+                  value={service.description || ""}
+                  onChange={(e) => handleArrayUpdate("services", index, "description", e.target.value)}
+                />
+            <div className="flex py-4 flex-col">
+                  <Label>Features</Label>
+                  {service.features?.map((feature: string, featureIndex: number) => (
+                    <div key={featureIndex} className="flex items-center gap-2 mt-1">
+                      <Input
+                        placeholder="Feature"
+                        value={feature || ""}
+                        onChange={(e) => {
+                          const newFeatures = [...(service.features || [])]
+                          newFeatures[featureIndex] = e.target.value
+                          handleArrayUpdate("services", index, "features", newFeatures)
+                        }}
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          const newFeatures = [...(service.features || [])]
+                          newFeatures.splice(featureIndex, 1)
+                          handleArrayUpdate("services", index, "features", newFeatures)
+                        }}
+                      >
+                        <Minus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 bg-transparent"
+                    onClick={() => {
+                      const newFeatures = [...(service.features || []), "New Feature"]
+                      handleArrayUpdate("services", index, "features", newFeatures)
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Feature
+                  </Button>
+                </div>
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() =>
+                handleArrayAdd("services", {
+                  title: "New Service",
+                  description: "Service description",
+                  icon: "✨",
+                  features: [],
+                })
+              }
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Service
+            </Button>
+          </div>
+        </div>
+      )
+    case "pricing":
+      return (
+        <div className="space-y-6">
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+            <div className="flex gap-2 flex-col">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Input
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>Plans</Label>
+            {props.plans?.map((plan: any, index: number) => (
+              <div key={index} className="border border-gray-300 shadow-xs rounded-lg p-3 my-6 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Plan {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("plans", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Name"
+                  value={plan.name || ""}
+                  onChange={(e) => handleArrayUpdate("plans", index, "name", e.target.value)}
+                />
+                <Input
+                  placeholder="Price"
+                  value={plan.price || ""}
+                  onChange={(e) => handleArrayUpdate("plans", index, "price", e.target.value)}
+                />
+                <Input
+                  placeholder="Period (e.g., month, year)"
+                  value={plan.period || ""}
+                  onChange={(e) => handleArrayUpdate("plans", index, "period", e.target.value)}
+                />
+                <Textarea
+                  placeholder="Description"
+                  value={plan.description || ""}
+                  onChange={(e) => handleArrayUpdate("plans", index, "description", e.target.value)}
+                />
+                <div className="flex flex-col py-4">
+                  <Label>Features</Label>
+                  {plan.features?.map((feature: string, featureIndex: number) => (
+                    <div key={featureIndex} className="flex items-center gap-2 my-2">
+                      <Input
+                        placeholder="Feature"
+                        value={feature || ""}
+                        onChange={(e) => {
+                          const newFeatures = [...(plan.features || [])]
+                          newFeatures[featureIndex] = e.target.value
+                          handleArrayUpdate("plans", index, "features", newFeatures)
+                        }}
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          const newFeatures = [...(plan.features || [])]
+                          newFeatures.splice(featureIndex, 1)
+                          handleArrayUpdate("plans", index, "features", newFeatures)
+                        }}
+                      >
+                        <Minus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 bg-transparent"
+                    onClick={() => {
+                      const newFeatures = [...(plan.features || []), "New Feature"]
+                      handleArrayUpdate("plans", index, "features", newFeatures)
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Feature
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id={`popular-${index}`}
+                    checked={plan.popular || false}
+                    onChange={(e) => handleArrayUpdate("plans", index, "popular", e.target.checked)}
+                  />
+                  <Label htmlFor={`popular-${index}`}>Most Popular</Label>
+                </div>
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() =>
+                handleArrayAdd("plans", {
+                  name: "New Plan",
+                  price: "$0",
+                  period: "month",
+                  description: "Plan description",
+                  features: [],
+                  popular: false,
+                })
+              }
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Plan
+            </Button>
+          </div>
+        </div>
+      )
+    case "testimonials":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+          <div>
+            <Label>Testimonials</Label>
+            {props.testimonials?.map((testimonial: any, index: number) => (
+              <div key={index} className="border border-gray-300 shadow-xs rounded-lg py-4 my-4 p-3 mt-2 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Testimonial {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("testimonials", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Name"
+                  value={testimonial.name || ""}
+                  onChange={(e) => handleArrayUpdate("testimonials", index, "name", e.target.value)}
+                />
+                <Input
+                  placeholder="Role"
+                  value={testimonial.role || ""}
+                  onChange={(e) => handleArrayUpdate("testimonials", index, "role", e.target.value)}
+                />
+                <Textarea
+                  placeholder="Content"
+                  value={testimonial.content || ""}
+                  onChange={(e) => handleArrayUpdate("testimonials", index, "content", e.target.value)}
+                />
+                <Input
+                  placeholder="Avatar URL"
+                  value={testimonial.avatar || ""}
+                  onChange={(e) => handleArrayUpdate("testimonials", index, "avatar", e.target.value)}
+                />
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() =>
+                handleArrayAdd("testimonials", {
+                  name: "New Customer",
+                  role: "Role",
+                  content: "Amazing product!",
+                  avatar: "/placeholder.svg?height=60&width=60",
+                })
+              }
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Testimonial
+            </Button>
+          </div>
+        </div>
+      )
+    case "gallery":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Input
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Images</Label>
+            {props.images?.map((image: any, index: number) => (
+              <div key={index} className="border border-gray-300 shadow-xs my-2 py-4 rounded-lg p-3 mt-2 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Image {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("images", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Image URL"
+                  value={image.url || ""}
+                  onChange={(e) => handleArrayUpdate("images", index, "url", e.target.value)}
+                />
+                <Input
+                  placeholder="Alt Text"
+                  value={image.alt || ""}
+                  onChange={(e) => handleArrayUpdate("images", index, "alt", e.target.value)}
+                />
+                <Input
+                  placeholder="Title"
+                  value={image.title || ""}
+                  onChange={(e) => handleArrayUpdate("images", index, "title", e.target.value)}
+                />
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() =>
+                handleArrayAdd("images", {
+                  url: "/placeholder.svg?height=300&width=400",
+                  alt: "New Image",
+                  title: "New Image",
+                })
+              }
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Image
+            </Button>
+          </div>
+        </div>
+      )
+    case "contact":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Textarea
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+          <div className="border border-gray-300 gap-1 flex flex-col rounded-lg p-3 space-y-2">
+            <span className="font-medium">Contact Information</span>
+            <Input
+              placeholder="Email"
+              value={props.contactInfo?.email || ""}
+              onChange={(e) => handleUpdate("contactInfo", { ...props.contactInfo, email: e.target.value })}
+            />
+            <Input
+              placeholder="Phone"
+              value={props.contactInfo?.phone || ""}
+              onChange={(e) => handleUpdate("contactInfo", { ...props.contactInfo, phone: e.target.value })}
+            />
+            <Textarea
+              placeholder="Address"
+              value={props.contactInfo?.address || ""}
+              onChange={(e) => handleUpdate("contactInfo", { ...props.contactInfo, address: e.target.value })}
+            />
+          </div>
+        </div>
+      )
+    case "newsletter":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Textarea
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="placeholder">Input Placeholder</Label>
+            <Input
+              id="placeholder"
+              value={props.placeholder || ""}
+              onChange={(e) => handleUpdate("placeholder", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="buttonText">Button Text</Label>
+            <Input
+              id="buttonText"
+              value={props.buttonText || ""}
+              onChange={(e) => handleUpdate("buttonText", e.target.value)}
+            />
+          </div>
+        </div>
+      )
+    case "blog":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Input
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Posts</Label>
+            {props.posts?.map((post: any, index: number) => (
+              <div key={index} className="border border-gray-300 shadow-xs my-2 flex flex-col gap-2 py-4 rounded-lg p-3 mt-2 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Post {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("posts", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Title"
+                  value={post.title || ""}
+                  onChange={(e) => handleArrayUpdate("posts", index, "title", e.target.value)}
+                />
+                <Textarea
+                  placeholder="Excerpt"
+                  value={post.excerpt || ""}
+                  onChange={(e) => handleArrayUpdate("posts", index, "excerpt", e.target.value)}
+                />
+                <Input
+                  placeholder="Image URL"
+                  value={post.image || ""}
+                  onChange={(e) => handleArrayUpdate("posts", index, "image", e.target.value)}
+                />
+                <Input
+                  placeholder="Date"
+                  value={post.date || ""}
+                  onChange={(e) => handleArrayUpdate("posts", index, "date", e.target.value)}
+                />
+                <Input
+                  placeholder="Author"
+                  value={post.author || ""}
+                  onChange={(e) => handleArrayUpdate("posts", index, "author", e.target.value)}
+                />
+                <Input
+                  placeholder="Read Time"
+                  value={post.readTime || ""}
+                  onChange={(e) => handleArrayUpdate("posts", index, "readTime", e.target.value)}
+                />
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() =>
+                handleArrayAdd("posts", {
+                  title: "New Blog Post",
+                  excerpt: "A short summary of the post.",
+                  image: "/placeholder.svg?height=200&width=300",
+                  date: "Month Day, Year",
+                  author: "Author Name",
+                  readTime: "X min read",
+                })
+              }
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Post
+            </Button>
+          </div>
+        </div>
+      )
+    case "cta":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Textarea
+              id="subtitle"
+              value={props.subtitle || ""}
+              onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="buttonText">Button Text</Label>
+            <Input
+              id="buttonText"
+              value={props.buttonText || ""}
+              onChange={(e) => handleUpdate("buttonText", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="buttonLink">Button Link</Label>
+            <Select
+              value={pages.some((p) => p.id === props.buttonLink) ? props.buttonLink : "external"}
+              onValueChange={(value) => handleUpdate("buttonLink", value === "external" ? "#" : value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Link to..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="external">External URL</SelectItem>
+                <DropdownMenuSeparator />
+                {pages.map((page) => (
+                  <SelectItem key={page.id} value={page.id}>
+                    Page: {page.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {(!pages.some((p) => p.id === props.buttonLink) || props.buttonLink === "#") && (
+              <Input
+                placeholder="External URL (e.g., #contact or https://example.com)"
+                value={props.buttonLink || ""}
+                onChange={(e) => handleUpdate("buttonLink", e.target.value)}
+                className="mt-2"
+              />
+            )}
+          </div>
+        </div>
+      )
+    case "footer":
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="companyName">Company Name</Label>
+            <Input
+              id="companyName"
+              value={props.companyName || ""}
+              onChange={(e) => handleUpdate("companyName", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={props.description || ""}
+              onChange={(e) => handleUpdate("description", e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Links</Label>
+            {props.links?.map((link: any, index: number) => (
+              <div key={index} className="border border-gray-300 shadow-sm my-2 flex flex-col gap-2 py-4 rounded-lg p-3 mt-2 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Link {index + 1}</span>
+                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("links", index)}>
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Input
+                  placeholder="Title"
+                  value={link.title || ""}
+                  onChange={(e) => handleArrayUpdate("links", index, "title", e.target.value)}
+                />
+                <Input
+                  placeholder="URL"
+                  value={link.url || ""}
+                  onChange={(e) => handleArrayUpdate("links", index, "url", e.target.value)}
+                />
+              </div>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-2 bg-transparent"
+              onClick={() => handleArrayAdd("links", { title: "New Link", url: "#" })}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Link
+            </Button>
+          </div>
+        </div>
+      )
+
       default:
         return (
           <div className="space-y-4">
@@ -308,7 +955,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+      <div className="p-4 border-b flex items-center justify-between flex-shrink-0">
         <h3 className="text-lg font-semibold">Edit {section.type.charAt(0).toUpperCase() + section.type.slice(1)}</h3>
         <Button size="sm" variant="ghost" onClick={onClose}>
           <X className="w-4 h-4" />
@@ -342,7 +989,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-200 flex-shrink-0">
+      <div className="p-4 border-t border-gray-300 flex-shrink-0">
         <Button variant="destructive" size="sm" onClick={() => onDelete(section.id)} className="w-full">
           <Trash2 className="w-4 h-4 mr-2" />
           Delete Section
