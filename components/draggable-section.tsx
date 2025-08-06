@@ -28,7 +28,7 @@ export function DraggableSection({
 }: DraggableSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
 
-  const [{ isDragging }, drag, preview] = useDrag({
+  const [{ isDragging }, drag, preview]: any = useDrag({
     type: "section",
     item: { index },
     collect: (monitor) => ({
