@@ -6,7 +6,6 @@ export async function GET(request: NextRequest) {
   const width = parseInt(searchParams.get('width') || '200', 10);
   const query = searchParams.get('query') || 'Placeholder';
 
-  // Basic SVG generation
   const svg = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
       <rect width="${width}" height="${height}" fill="#e0e0e0"/>
@@ -17,7 +16,7 @@ export async function GET(request: NextRequest) {
   return new NextResponse(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=31536000, immutable', // Cache for a long time
+      'Cache-Control': 'public, max-age=31536000, immutable', 
     },
   });
 }

@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
-import SectionRenderer from "@/components/section-renderer" // Updated to default import
+import SectionRenderer from "@/components/section-renderer"
 import { Button } from "@/components/ui/button"
 import { GripVertical, Settings, Trash2 } from 'lucide-react'
 import type { Section } from "@/app/page"
@@ -61,10 +61,8 @@ export function DraggableSection({
       }`}
       onClick={onSelect}
     >
-      {/* Overlay for hover effect */}
       <div className="absolute inset-0 bg-black/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[5] rounded-lg"></div>
 
-      {/* Drag Handle */}
       <div
         ref={drag as any}
         className="absolute left-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity cursor-move"
@@ -74,14 +72,12 @@ export function DraggableSection({
         </Button>
       </div>
 
-      {/* Edit Button */}
       <div className="absolute right-12 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button size="sm" variant="secondary" className="h-8 w-8 p-0">
           <Settings className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Delete Button */}
       <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           size="sm"
@@ -96,12 +92,10 @@ export function DraggableSection({
         </Button>
       </div>
 
-      {/* Section Content */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <SectionRenderer section={section} onNavigateToPage={onNavigateToPage} />
       </div>
 
-      {/* Selection Indicator */}
       {isSelected && (
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-br-md">

@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { useDrop } from "react-dnd"
-import SectionRenderer from "@/components/section-renderer" // Updated to default import
+import SectionRenderer from "@/components/section-renderer" 
 import { DraggableSection } from "@/components/draggable-section"
 import type { Section } from "@/app/page"
 
@@ -13,7 +13,7 @@ interface PreviewAreaProps {
   onReorderSections: (dragIndex: number, hoverIndex: number) => void
   isPreviewMode: boolean
   onNavigateToPage: (pageId: string) => void
-  onDeleteSection: (sectionId: string) => void // New prop for deleting sections
+  onDeleteSection: (sectionId: string) => void 
 }
 
 export function PreviewArea({
@@ -23,7 +23,7 @@ export function PreviewArea({
   onReorderSections,
   isPreviewMode,
   onNavigateToPage,
-  onDeleteSection, // Destructure new prop
+  onDeleteSection, 
 }: PreviewAreaProps) {
   const [, drop] = useDrop({
     accept: "section",
@@ -66,7 +66,7 @@ export function PreviewArea({
                 onSelect={() => onSelectSection(section)}
                 onReorder={onReorderSections}
                 onNavigateToPage={onNavigateToPage}
-                onDelete={onDeleteSection} // Pass onDeleteSection to DraggableSection
+                onDelete={onDeleteSection} 
               />
             ),
           )}

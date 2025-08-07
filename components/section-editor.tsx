@@ -1,4 +1,5 @@
-"use client"
+
+  "use client"
 
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 
@@ -11,7 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { X, Trash2, Plus, Minus } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { Section, Page } from "@/app/page"
-import Image from "next/image" // Import Image for preview
+import Image from "next/image" 
 
 interface SectionEditorProps {
 section: Section
@@ -119,7 +120,7 @@ const renderEditor = () => {
                 />
                 <Select
                   value={pages.some((p) => p.id === item.link) ? item.link : "external"} 
-                  onValueChange={(value) => // Changed to onValueChange
+                  onValueChange={(value) => 
                     handleArrayUpdate("navigation", index, "link", value === "external" ? "#" : value)
                   }
                 >
@@ -136,7 +137,7 @@ const renderEditor = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                {(!pages.some((p) => p.id === item.link) || item.link === "#") && ( // Show input if not a page ID or is '#'
+                {(!pages.some((p) => p.id === item.link) || item.link === "#") && (
                   <Input
                     placeholder="External URL (e.g., #services or https://example.com)"
                     value={item.link || ""}
@@ -185,8 +186,8 @@ const renderEditor = () => {
           <div className="flex gap-2 flex-col">
             <Label htmlFor="buttonLink">Button Link</Label>
             <Select
-              value={pages.some((p) => p.id === props.buttonLink) ? props.buttonLink : "external"} // Check if link is a page ID
-              onValueChange={(value) => handleUpdate("buttonLink", value === "external" ? "#" : value)} // Changed to onValueChange
+              value={pages.some((p) => p.id === props.buttonLink) ? props.buttonLink : "external"} 
+              onValueChange={(value) => handleUpdate("buttonLink", value === "external" ? "#" : value)} 
             >
               <SelectTrigger>
                 <SelectValue placeholder="Link to..." />
@@ -201,7 +202,7 @@ const renderEditor = () => {
                 ))}
               </SelectContent>
             </Select>
-            {(!pages.some((p) => p.id === props.buttonLink) || props.buttonLink === "#") && ( // Show input if not a page ID or is '#'
+            {(!pages.some((p) => p.id === props.buttonLink) || props.buttonLink === "#") && ( 
               <Input
                 placeholder="External URL (e.g., #contact or https://example.com)"
                 value={props.buttonLink || ""}
@@ -210,7 +211,6 @@ const renderEditor = () => {
               />
             )}
           </div>
-          {/* Replaced Background Image URL input with file upload */}
           <div className="flex gap-2 flex-col">
             <Label htmlFor="backgroundImageUpload">Background Image</Label>
             <div className="flex items-center gap-2">
@@ -218,22 +218,21 @@ const renderEditor = () => {
                 id="backgroundImageUpload"
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleImageUpload(e, "backgroundImage", "")} // Changed default placeholder to empty string
+                onChange={(e) => handleImageUpload(e, "backgroundImage", "")} 
                 className="flex-1"
               />
-              {props.backgroundImage && ( // Only show remove button if image exists
-                <Button variant="outline" size="sm" onClick={() => handleUpdate("backgroundImage", "")}> {/* Changed default placeholder to empty string */}
+              {props.backgroundImage && ( 
+                <Button variant="outline" size="sm" onClick={() => handleUpdate("backgroundImage", "")}> 
                   Remove Image
                 </Button>
               )}
             </div>
-            {props.backgroundImage && ( // Only show preview if image exists
+            {props.backgroundImage && ( 
               <div className="mt-2">
-                <Image src={props.backgroundImage || "/placeholder.svg"} alt="Current background image preview" width={100} height={60} className="rounded-md object-cover" unoptimized /> {/* Added unoptimized */}
+                <Image src={props.backgroundImage || "/placeholder.svg"} alt="Current background image preview" width={100} height={60} className="rounded-md object-cover" unoptimized /> 
               </div>
             )}
           </div>
-          {/* Button Color Options */}
           <div className="flex gap-2 flex-col">
             <Label htmlFor="buttonBackgroundColor">Button Background Color</Label>
             <Input
@@ -385,7 +384,6 @@ const renderEditor = () => {
             onChange={(e) => handleUpdate("description", e.target.value)}
           />
         </div>
-        {/* Replaced Image URL input with file upload */}
         <div className="flex gap-2 flex-col">
           <Label htmlFor="imageUpload">Image</Label>
           <div className="flex items-center gap-2">
@@ -393,16 +391,16 @@ const renderEditor = () => {
               id="imageUpload"
               type="file"
               accept="image/*"
-              onChange={(e) => handleImageUpload(e, "image", "")} // Changed default placeholder to empty string
+              onChange={(e) => handleImageUpload(e, "image", "")} 
               className="flex-1"
             />
-            {props.image && ( // Only show remove button if image exists
-              <Button variant="outline" size="sm" onClick={() => handleUpdate("image", "")}> // Changed default placeholder to empty string
+            {props.image && ( 
+              <Button variant="outline" size="sm" onClick={() => handleUpdate("image", "")}> 
                 Remove Image
               </Button>
             )}
           </div>
-          {props.image && ( // Only show preview if image exists
+          {props.image && ( 
             <div className="mt-2">
               <Image src={props.image || "/placeholder.svg"} alt="Current image preview" width={100} height={100} className="rounded-md object-cover" unoptimized />
             </div>
@@ -658,7 +656,7 @@ const renderEditor = () => {
         </div>
       </div>
     )
-  case "testimonials":
+    case "testimonials":
     return (
       <div className="space-y-6">
         <div className="flex flex-col gap-2">
@@ -690,7 +688,6 @@ const renderEditor = () => {
                 value={testimonial.content || ""}
                 onChange={(e) => handleArrayUpdate("testimonials", index, "content", e.target.value)}
               />
-              {/* Replaced Avatar URL input with file upload */}
               <div className="flex gap-2 flex-col">
                 <Label htmlFor={`avatarUpload-${index}`}>Avatar</Label>
                 <div className="flex items-center gap-2">
@@ -698,16 +695,16 @@ const renderEditor = () => {
                     id={`avatarUpload-${index}`}
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleArrayImageUpload(e, "testimonials", index, "avatar", "")} // Changed default placeholder to empty string
+                    onChange={(e) => handleArrayImageUpload(e, "testimonials", index, "avatar", "")}
                     className="flex-1"
                   />
-                  {testimonial.avatar && testimonial.avatar !== "" && ( // Only show remove button if image exists
-                    <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("testimonials", index, "avatar", "")}> // Changed default placeholder to empty string
+                  {testimonial.avatar && testimonial.avatar !== "" && (
+                    <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("testimonials", index, "avatar", "")}>
                       Remove Image
                     </Button>
                   )}
                 </div>
-                {testimonial.avatar && ( // Only show preview if image exists
+                {testimonial.avatar && (
                   <div className="mt-2">
                     <Image src={testimonial.avatar || "/placeholder.svg"} alt="Current avatar preview" width={60} height={60} className="rounded-full object-cover" unoptimized />
                   </div>
@@ -724,7 +721,7 @@ const renderEditor = () => {
                 name: "New Customer",
                 role: "Role",
                 content: "Amazing product!",
-                avatar: "", // Changed to empty string
+                avatar: "",
               })
             }
           >
@@ -837,7 +834,6 @@ const renderEditor = () => {
                 value={post.excerpt || ""}
                 onChange={(e) => handleArrayUpdate("posts", index, "excerpt", e.target.value)}
               />
-              {/* Image Upload for Blog Post */}
               <div className="flex gap-2 flex-col">
                 <Label htmlFor={`blogImageUpload-${index}`}>Image</Label>
                 <div className="flex items-center gap-2">
@@ -845,16 +841,16 @@ const renderEditor = () => {
                     id={`blogImageUpload-${index}`}
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleArrayImageUpload(e, "posts", index, "image", "")} // Changed default placeholder to empty string
+                    onChange={(e) => handleArrayImageUpload(e, "posts", index, "image", "")}
                     className="flex-1"
                   />
-                  {post.image && post.image !== "" && ( // Only show remove button if image exists
-                    <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("posts", index, "image", "")}> // Changed default placeholder to empty string
+                  {post.image && post.image !== "" && (
+                    <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("posts", index, "image", "")}>
                       Remove Image
                     </Button>
                   )}
                 </div>
-                {post.image && ( // Only show preview if image exists
+                {post.image && (
                   <div className="mt-2">
                     <Image src={post.image || "/placeholder.svg"} alt="Current blog post image preview" width={100} height={60} className="rounded-md object-cover" unoptimized />
                   </div>
@@ -885,7 +881,7 @@ const renderEditor = () => {
               handleArrayAdd("posts", {
                 title: "New Blog Post",
                 excerpt: "A short summary of the post.",
-                image: "", // Changed to empty string
+                image: "",
                 date: "Month Day, Year",
                 author: "Author Name",
                 readTime: "X min read",
@@ -925,7 +921,7 @@ const renderEditor = () => {
           <Label htmlFor="buttonLink">Button Link</Label>
           <Select
             value={pages.some((p) => p.id === props.buttonLink) ? props.buttonLink : "external"}
-            onValueChange={(value) => handleUpdate("buttonLink", value === "external" ? "#" : value)} // Changed to onValueChange
+            onValueChange={(value) => handleUpdate("buttonLink", value === "external" ? "#" : value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Link to..." />
@@ -951,79 +947,79 @@ const renderEditor = () => {
         </div>
       </div>
     )
-    case "footer":
-      return (
-        <div className="space-y-6">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input
-              id="companyName"
-              value={props.companyName || ""}
-              onChange={(e) => handleUpdate("companyName", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={props.description || ""}
-              onChange={(e) => handleUpdate("description", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>Links</Label>
-            {props.links?.map((link: any, index: number) => (
-              <div key={index} className="border rounded-lg shadow-sm border-gray-300 py-4 my-2 p-3 mt-2 space-y-2">
-                <div className="flex justify-between items-center gap-2">
-                  <span className="font-medium">Link {index + 1}</span>
-                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("links", index)}>
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                </div>
-                <Input
-                  placeholder="Title"
-                  value={link.title || ""}
-                  onChange={(e) => handleArrayUpdate("links", index, "title", e.target.value)}
-                />
-                <Select
-                  value={pages.some((p) => p.id === link.url) ? link.url : "external"}
-                  onValueChange={(value) => handleArrayUpdate("links", index, "url", value === "external" ? "#" : value)} // Changed onChange to onValueChange and updated callback
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Link to..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="external">External URL</SelectItem>
-                    <DropdownMenuSeparator />
-                    {pages.map((page) => (
-                      <SelectItem key={page.id} value={page.id}>
-                        Page: {page.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {(!pages.some((p) => p.id === link.url) || link.url === "#") && (
-                  <Input
-                    placeholder="External URL (e.g., #contact or https://example.com)"
-                    value={link.url || ""}
-                    onChange={(e) => handleArrayUpdate("links", index, "url", e.target.value)}
-                    className="mt-2"
-                  />
-                )}
-              </div>
-            ))}
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-2 bg-transparent"
-              onClick={() => handleArrayAdd("links", { title: "New Link", url: "#" })}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Link
-            </Button>
-          </div>
+  case "footer":
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="companyName">Company Name</Label>
+          <Input
+            id="companyName"
+            value={props.companyName || ""}
+            onChange={(e) => handleUpdate("companyName", e.target.value)}
+          />
         </div>
-      )
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            value={props.description || ""}
+            onChange={(e) => handleUpdate("description", e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Links</Label>
+          {props.links?.map((link: any, index: number) => (
+            <div key={index} className="border rounded-lg shadow-sm border-gray-300 py-4 my-2 p-3 mt-2 space-y-2">
+              <div className="flex justify-between items-center gap-2">
+                <span className="font-medium">Link {index + 1}</span>
+                <Button size="sm" variant="outline" onClick={() => handleArrayRemove("links", index)}>
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+              <Input
+                placeholder="Title"
+                value={link.title || ""}
+                onChange={(e) => handleArrayUpdate("links", index, "title", e.target.value)}
+              />
+              <Select
+                value={pages.some((p) => p.id === link.url) ? link.url : "external"}
+                onValueChange={(value) => handleArrayUpdate("links", index, "url", value === "external" ? "#" : value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Link to..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="external">External URL</SelectItem>
+                  <DropdownMenuSeparator />
+                  {pages.map((page) => (
+                    <SelectItem key={page.id} value={page.id}>
+                      Page: {page.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {(!pages.some((p) => p.id === link.url) || link.url === "#") && (
+                <Input
+                  placeholder="External URL (e.g., #contact or https://example.com)"
+                  value={link.url || ""}
+                  onChange={(e) => handleArrayUpdate("links", index, "url", e.target.value)}
+                  className="mt-2"
+                />
+              )}
+            </div>
+          ))}
+          <Button
+            size="sm"
+            variant="outline"
+            className="mt-2 bg-transparent"
+            onClick={() => handleArrayAdd("links", { title: "New Link", url: "#" })}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Link
+          </Button>
+        </div>
+      </div>
+    )
   case "stats":
     return (
       <div className="space-y-6">

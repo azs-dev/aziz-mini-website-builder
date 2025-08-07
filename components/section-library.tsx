@@ -153,7 +153,6 @@ const sectionTypes = [
 },
 ]
 
-// Enhanced preview components with better styling
 const SectionPreview = ({ type, color }: { type: string; color: string }) => {
 const baseClasses = "w-full h-20 rounded-lg overflow-hidden shadow-inner border border-gray-100"
 

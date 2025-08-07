@@ -9,7 +9,7 @@ import { SectionLibrary } from "@/components/section-library";
 import { PreviewArea } from "@/components/preview-area";
 import { SectionEditor } from "@/components/section-editor";
 import { Button } from "@/components/ui/button";
-import { Download, Upload, Eye, Code, Plus, Trash2, Pencil, Copy, BookOpen, Loader2 } from 'lucide-react';
+import { Download, Upload, Eye, Code, Plus, Trash2, Pencil, Copy, BookOpen, Loader2, Eraser } from 'lucide-react';
 import { toast } from "sonner";
 import Joyride, { type CallBackProps, STATUS, type Step } from "react-joyride";
 import {
@@ -23,7 +23,7 @@ DialogFooter,
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import SectionRenderer from "@/components/section-renderer"; // Updated to default import
+import SectionRenderer from "@/components/section-renderer";
 
 export interface Section {
 id: string;
@@ -53,18 +53,18 @@ sections: Section[];
 }
 
 export default function WebsiteBuilder() {
-const [pages, setPages] = useState<Page[]>([]); // Initialize as empty, will load from localStorage
-const [currentPageId, setCurrentPageId] = useState<string>(""); // Initialize as empty, will load from localStorage
+const [pages, setPages] = useState<Page[]>([]);
+const [currentPageId, setCurrentPageId] = useState<string>("");
 const [selectedSection, setSelectedSection] = useState<Section | null>(null);
 const [isPreviewMode, setIsPreviewMode] = useState(false);
 const fileInputRef = useRef<HTMLInputElement>(null);
 const [isPageManagementOpen, setIsPageManagementOpen] = useState(false);
 const [pageToRename, setPageToRename] = useState<Page | null>(null);
 const [newPageName, setNewPageName] = useState("");
+const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
 
-// Joyride state
 const [runTour, setRunTour] = useState(false);
-const [isClient, setIsClient] = useState(false); // Add this state variable
+const [isClient, setIsClient] = useState(false);
 
 const [tourSteps] = useState<Step[]>([
   {
@@ -121,9 +121,8 @@ const [tourSteps] = useState<Step[]>([
   },
 ]);
 
-// Effect to load state from localStorage on initial mount
 useEffect(() => {
-  setIsClient(true); // For Joyride
+  setIsClient(true);
   const hasVisitedBefore = localStorage.getItem("first-time-visit");
   if (hasVisitedBefore === null || hasVisitedBefore === "true") {
     setRunTour(true);
@@ -144,33 +143,28 @@ useEffect(() => {
       } else if (parsedPages.length > 0) {
         setCurrentPageId(parsedPages[0].id);
       } else {
-        // Fallback if savedPages is empty array
         setPages([{ id: "home", name: "Home", sections: [] }]);
         setCurrentPageId("home");
       }
     } catch (error) {
       console.error("Failed to parse saved pages from localStorage", error);
-      // Fallback to default if parsing fails
       setPages([{ id: "home", name: "Home", sections: [] }]);
       setCurrentPageId("home");
     }
   } else {
-    // No saved pages, initialize with default home page
     setPages([{ id: "home", name: "Home", sections: [] }]);
     setCurrentPageId("home");
   }
-}, []); // Empty dependency array means it runs once on mount
+}, []);
 
-// Effect to save pages to localStorage whenever pages state changes
 useEffect(() => {
-  if (isClient) { // Only save if client-side (after initial load)
+  if (isClient) {
     localStorage.setItem("websiteBuilderPages", JSON.stringify(pages));
   }
 }, [pages, isClient]);
 
-// Effect to save currentPageId to localStorage whenever currentPageId state changes
 useEffect(() => {
-  if (isClient && currentPageId) { // Only save if client-side and currentPageId is set
+  if (isClient && currentPageId) {
     localStorage.setItem("websiteBuilderCurrentPageId", currentPageId);
   }
 }, [currentPageId, isClient]);
@@ -265,6 +259,25 @@ const deleteSection = useCallback(
   },
   [currentPageId]
 );
+
+const clearAllSections = useCallback(() => {
+  setPages((prevPages) =>
+    prevPages.map((page) => {
+      if (page.id === currentPageId) {
+        return {
+          ...page,
+          sections: [],
+        };
+      }
+      return page;
+    })
+  );
+  setSelectedSection(null);
+  setIsClearConfirmOpen(false);
+  toast.error("All Sections Cleared", {
+    description: "All sections have been removed from the current page.",
+  });
+}, [currentPageId]);
 
 const reorderSections = useCallback(
   (dragIndex: number, hoverIndex: number) => {
@@ -419,7 +432,6 @@ const importDesign = useCallback((event: React.ChangeEvent<HTMLInputElement>) =>
   event.target.value = "";
 }, []);
 
-// Improved loading state
 if (!currentPage) {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-gray-700">
@@ -449,7 +461,7 @@ return (
       />
     )}
     <div className='h-screen flex flex-col bg-gray-50'>
-      <header className='bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between'>
+      <header className={`bg-white border-b border-gray-200 px-4 py-3 items-center justify-between ${isPreviewMode ? 'hidden' : 'flex'}`}>
         <div className='flex items-center gap-2'>
           <div className='w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center'>
             <Code className='w-4 h-4 text-white' />
@@ -492,17 +504,7 @@ return (
             <BookOpen className='w-4 h-4' />
             Manage Pages
           </Button>
-
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => setIsPreviewMode(!isPreviewMode)}
-            className='flex items-center gap-2'
-            data-tut='preview-toggle-button'
-          >
-            <Eye className='w-4 h-4' />
-            {isPreviewMode ? "Edit" : "Preview"}
-          </Button>
+          
           <Button
             variant='outline'
             size='sm'
@@ -522,6 +524,17 @@ return (
           >
             <Download className='w-4 h-4' />
             Export
+          </Button>
+          
+          <Button
+            variant='destructive'
+            size='sm'
+            onClick={() => setIsClearConfirmOpen(true)}
+            className='flex items-center gap-2 ml-2'
+            data-tut='clear-all-button'
+          >
+            <Eraser className='w-4 h-4' />
+            Clear All
           </Button>
         </div>
       </header>
@@ -577,7 +590,19 @@ return (
       />
     </div>
 
-    {/* Page Management Dialog */}
+    <div className="fixed bottom-4 right-4 z-50">
+      <Button
+        variant='default'
+        size='lg'
+        onClick={() => setIsPreviewMode(!isPreviewMode)}
+        className='flex items-center gap-2 shadow-lg'
+        data-tut='preview-toggle-button'
+      >
+        {isPreviewMode ? <Code className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
+        {isPreviewMode ? "Edit" : "Preview"}
+      </Button>
+    </div>
+
     <Dialog open={isPageManagementOpen} onOpenChange={setIsPageManagementOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -596,13 +621,11 @@ return (
                 id={`page-name-${page.id}`}
                 value={page.name}
                 onChange={(e) => {
-                  // Temporarily update name in UI for immediate feedback
                   setPages((prev) =>
                     prev.map((p) =>
                       p.id === page.id ? { ...p, name: e.target.value } : p
                     )
                   );
-                  // Set for actual rename action
                   setPageToRename(page);
                   setNewPageName(e.target.value);
                 }}
@@ -639,6 +662,25 @@ return (
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <Dialog open={isClearConfirmOpen} onOpenChange={setIsClearConfirmOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Clear All Sections</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to remove all sections from this page? This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-4">
+          <Button variant="outline" onClick={() => setIsClearConfirmOpen(false)}>
+            Cancel
+          </Button>
+          <Button variant="destructive" onClick={clearAllSections}>
+            Clear All Sections
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </DndProvider>
 );
 }
@@ -667,9 +709,9 @@ switch (type) {
       subtitle: "We create beautiful experiences that drive results",
       buttonText: "Get Started",
       buttonLink: "#",
-      backgroundImage: "", // Changed to empty string
-      buttonBackgroundColor: "#ffffff", // Default button background color
-      buttonTextColor: "#1f2937", // Default button text color
+      backgroundImage: "",
+      buttonBackgroundColor: "#ffffff",
+      buttonTextColor: "#1f2937",
       ...commonProps,
     };
   case "about":
@@ -678,7 +720,7 @@ switch (type) {
       subtitle: "We're passionate about creating amazing experiences",
       description:
         "Founded in 2020, we've been dedicated to delivering exceptional results for our clients. Our team of experts combines creativity with technical expertise to bring your vision to life.",
-      image: "", // Changed to empty string
+      image: "",
       stats: [
         { number: "500+", label: "Happy Clients" },
         { number: "1000+", label: "Projects Completed" },
@@ -778,13 +820,13 @@ switch (type) {
           name: "John Doe",
           role: "CEO, Company",
           content: "Amazing service and great results!",
-          avatar: "", // Changed to empty string
+          avatar: "",
         },
         {
           name: "Jane Smith",
           role: "Marketing Director",
           content: "Exceeded our expectations in every way.",
-          avatar: "", // Changed to empty string
+          avatar: "",
         },
       ],
       backgroundColor: "#f9fafb",
@@ -863,7 +905,7 @@ switch (type) {
           title: "10 Tips for Better Web Design",
           excerpt:
             "Learn the essential principles that make websites both beautiful and functional.",
-          image: "", // Changed to empty string
+          image: "",
           date: "March 15, 2024",
           author: "John Smith",
           readTime: "5 min read",
@@ -872,7 +914,7 @@ switch (type) {
           title: "The Future of Digital Marketing",
           excerpt:
             "Explore emerging trends and technologies shaping the digital marketing landscape.",
-          image: "", // Changed to empty string
+          image: "",
           date: "March 10, 2024",
           author: "Sarah Johnson",
           readTime: "8 min read",
@@ -881,7 +923,7 @@ switch (type) {
           title: "Building Scalable Web Applications",
           excerpt:
             "Best practices for creating web applications that can grow with your business.",
-          image: "", // Changed to empty string
+          image: "",
           date: "March 5, 2024",
           author: "Mike Davis",
           readTime: "12 min read",
@@ -915,14 +957,3 @@ switch (type) {
     return commonProps;
 }
 }
-
-/*
-- **ReactJS 14**
-- **Next.js**
-- **Tailwind CSS**
-- **shadcn/ui**
-- **React DND** (for drag and drop functionality)
-- **Lucide React** (for icons)
-- **Radix UI** (underlying primitives for shadcn/ui components)
-- **React Joyride** for Tour
-*/
