@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Abdulaziz Somandar
+Visit my website @: [https://aziz-somandar.vercel.app/](https://aziz-somandar.vercel.app/)
 
-## Getting Started
+# Mini Website Builder 🌐
 
-First, run the development server:
+This is a mini website builder developed as a take-home test for a Frontend Engineer position at Rekaz, Riyadh. It demonstrates my ability to create a dynamic, interactive web application using a modern and efficient tech stack.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Drag-and-Drop Interface:** Easily reorder website sections by dragging and dropping them into place.
+* **Guided User Tour:** An onboarding tour helps new users quickly learn how to use the builder's features.
+* **Customizable UI Components:** Built with accessible and reusable components from `shadcn/ui`.
+* **Responsive Design:** The application is styled with Tailwind CSS for a seamless experience on any device.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+| Technology | Description |
+| :--- | :--- |
+| **Next.js** | A React framework for building server-rendered applications, as required for the project. |
+| **TypeScript** | The primary language for the codebase, ensuring type safety and code quality. |
+| **Tailwind CSS** | A utility-first CSS framework for rapid and responsive styling. |
+| **shadcn/ui** | A collection of accessible and customizable UI components built on Radix UI. |
+| **Radix UI** | A low-level UI library providing unstyled, accessible primitives. |
+| **React DND** | A library for implementing the drag-and-drop functionality. |
+| **React Joyride** | Used to create the guided tour and onboarding experience. |
+| **Lucide React** | An icon library for visual cues throughout the application. |
+| **Sonner** | A toast library for displaying user notifications. |
+| **clsx & tailwind-merge** | Utilities for managing CSS class names efficiently. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🤖 AI Tools
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Tool | Description |
+| :--- | :--- |
+| **Claude** | Used as a code verifier to ensure high-quality, error-free code. |
+| **Gemini** | Utilized for spelling and wording checks to maintain clear and professional documentation. |

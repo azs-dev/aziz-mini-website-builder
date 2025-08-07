@@ -28,7 +28,7 @@ const sectionTypes = [
 {
   type: "header" as const,
   title: "Header",
-  description: "Navigation bar with logo and menu items",
+  description: "Navigation bar with brand name and menu items",
   icon: Layout,
   color: "from-blue-500 to-blue-600",
   bgColor: "bg-blue-50",
@@ -45,7 +45,7 @@ const sectionTypes = [
 },
 {
   type: "about" as const,
-  title: "About Us",
+  title: "About",
   description: "Company story with stats and image",
   icon: Users,
   color: "from-green-500 to-emerald-500",

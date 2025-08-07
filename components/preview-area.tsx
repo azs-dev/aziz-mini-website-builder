@@ -36,7 +36,7 @@ export function PreviewArea({
   if (sections.length === 0) {
     return (
       <div ref={ref} className="h-full flex items-center justify-center bg-gray-50">
-        <div className="text-center">
+        <div className="text-center" data-tut='preview-area'>
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">📄</span>
           </div>
