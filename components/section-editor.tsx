@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
-import { X, Trash2, Plus, Minus } from "lucide-react"
+import { X, Trash2, Plus, Minus } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { Section, Page } from "@/app/page"
+import Image from "next/image" // Import Image for preview
 
 interface SectionEditorProps {
   section: Section
@@ -50,6 +51,47 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
     array.splice(index, 1)
     handleUpdate(key, array)
   }
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, propKey: string, defaultPlaceholder: string) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleUpdate(propKey, reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleArrayImageUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    arrayKey: string,
+    index: number,
+    field: string,
+    defaultPlaceholder: string,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const array = [...(props[arrayKey] || [])];
+        array[index] = { ...array[index], [field]: reader.result as string };
+        handleUpdate(arrayKey, array);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleArrayImageRemove = (
+    arrayKey: string,
+    index: number,
+    field: string,
+    defaultPlaceholder: string,
+  ) => {
+    const array = [...(props[arrayKey] || [])];
+    array[index] = { ...array[index], [field]: defaultPlaceholder };
+    handleUpdate(arrayKey, array);
+  };
 
   const renderEditor = () => {
     switch (section.type) {
@@ -169,11 +211,44 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
               )}
             </div>
             <div className="flex gap-2 flex-col">
-              <Label htmlFor="backgroundImage">Background Image URL</Label>
+              <Label htmlFor="backgroundImageUpload">Background Image</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="backgroundImageUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, "backgroundImage", "/placeholder.svg?height=600&width=1200")}
+                  className="flex-1"
+                />
+                {props.backgroundImage && props.backgroundImage !== "/placeholder.svg?height=600&width=1200" && (
+                  <Button variant="outline" size="sm" onClick={() => handleUpdate("backgroundImage", "/placeholder.svg?height=600&width=1200")}>
+                    Remove Image
+                  </Button>
+                )}
+              </div>
+              {props.backgroundImage && (
+                <div className="mt-2">
+                  <Image src={props.backgroundImage || "/placeholder.svg"} alt="" width={100} height={60} className="rounded-md object-cover" />
+                </div>
+              )}
+            </div>
+            {/* Button Color Options */}
+            <div className="flex gap-2 flex-col">
+              <Label htmlFor="buttonBackgroundColor">Button Background Color</Label>
               <Input
-                id="backgroundImage"
-                value={props.backgroundImage || ""}
-                onChange={(e) => handleUpdate("backgroundImage", e.target.value)}
+                id="buttonBackgroundColor"
+                type="color"
+                value={props.buttonBackgroundColor || "#ffffff"}
+                onChange={(e) => handleUpdate("buttonBackgroundColor", e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2 flex-col">
+              <Label htmlFor="buttonTextColor">Button Text Color</Label>
+              <Input
+                id="buttonTextColor"
+                type="color"
+                value={props.buttonTextColor || "#000000"}
+                onChange={(e) => handleUpdate("buttonTextColor", e.target.value)}
               />
             </div>
           </div>
@@ -309,9 +384,28 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
               onChange={(e) => handleUpdate("description", e.target.value)}
             />
           </div>
-            <div className="flex gap-2 flex-col">
-            <Label htmlFor="image">Image URL</Label>
-            <Input id="image" value={props.image || ""} onChange={(e) => handleUpdate("image", e.target.value)} />
+          {/* Replaced Image URL input with file upload */}
+          <div className="flex gap-2 flex-col">
+            <Label htmlFor="imageUpload">Image</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="imageUpload"
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageUpload(e, "image", "/placeholder.svg?height=400&width=600")}
+                className="flex-1"
+              />
+              {props.image && props.image !== "/placeholder.svg?height=400&width=600" && (
+                <Button variant="outline" size="sm" onClick={() => handleUpdate("image", "/placeholder.svg?height=400&width=600")}>
+                  Remove Image
+                </Button>
+              )}
+            </div>
+            {props.image && (
+              <div className="mt-2">
+                <Image src={props.image || "/placeholder.svg"} alt="Current image preview" width={100} height={100} className="rounded-md object-cover" />
+              </div>
+            )}
           </div>
           <div>
             <Label>Stats</Label>
@@ -595,11 +689,29 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                   value={testimonial.content || ""}
                   onChange={(e) => handleArrayUpdate("testimonials", index, "content", e.target.value)}
                 />
-                <Input
-                  placeholder="Avatar URL"
-                  value={testimonial.avatar || ""}
-                  onChange={(e) => handleArrayUpdate("testimonials", index, "avatar", e.target.value)}
-                />
+                {/* Replaced Avatar URL input with file upload */}
+                <div className="flex gap-2 flex-col">
+                  <Label htmlFor={`avatarUpload-${index}`}>Avatar</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id={`avatarUpload-${index}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleArrayImageUpload(e, "testimonials", index, "avatar", "/placeholder.svg?height=60&width=60")}
+                      className="flex-1"
+                    />
+                    {testimonial.avatar && testimonial.avatar !== "/placeholder.svg?height=60&width=60" && (
+                      <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("testimonials", index, "avatar", "/placeholder.svg?height=60&width=60")}>
+                        Remove Image
+                      </Button>
+                    )}
+                  </div>
+                  {testimonial.avatar && (
+                    <div className="mt-2">
+                      <Image src={testimonial.avatar || "/placeholder.svg"} alt="Current avatar preview" width={60} height={60} className="rounded-full object-cover" />
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
             <Button
@@ -617,66 +729,6 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Testimonial
-            </Button>
-          </div>
-        </div>
-      )
-    case "gallery":
-      return (
-        <div className="space-y-6">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" value={props.title || ""} onChange={(e) => handleUpdate("title", e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="subtitle">Subtitle</Label>
-            <Input
-              id="subtitle"
-              value={props.subtitle || ""}
-              onChange={(e) => handleUpdate("subtitle", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>Images</Label>
-            {props.images?.map((image: any, index: number) => (
-              <div key={index} className="border border-gray-300 shadow-xs my-2 py-4 rounded-lg p-3 mt-2 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">Image {index + 1}</span>
-                  <Button size="sm" variant="outline" onClick={() => handleArrayRemove("images", index)}>
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                </div>
-                <Input
-                  placeholder="Image URL"
-                  value={image.url || ""}
-                  onChange={(e) => handleArrayUpdate("images", index, "url", e.target.value)}
-                />
-                <Input
-                  placeholder="Alt Text"
-                  value={image.alt || ""}
-                  onChange={(e) => handleArrayUpdate("images", index, "alt", e.target.value)}
-                />
-                <Input
-                  placeholder="Title"
-                  value={image.title || ""}
-                  onChange={(e) => handleArrayUpdate("images", index, "title", e.target.value)}
-                />
-              </div>
-            ))}
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-2 bg-transparent"
-              onClick={() =>
-                handleArrayAdd("images", {
-                  url: "/placeholder.svg?height=300&width=400",
-                  alt: "New Image",
-                  title: "New Image",
-                })
-              }
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Image
             </Button>
           </div>
         </div>
@@ -784,11 +836,29 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                   value={post.excerpt || ""}
                   onChange={(e) => handleArrayUpdate("posts", index, "excerpt", e.target.value)}
                 />
-                <Input
-                  placeholder="Image URL"
-                  value={post.image || ""}
-                  onChange={(e) => handleArrayUpdate("posts", index, "image", e.target.value)}
-                />
+                {/* Image Upload for Blog Post */}
+                <div className="flex gap-2 flex-col">
+                  <Label htmlFor={`blogImageUpload-${index}`}>Image</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id={`blogImageUpload-${index}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleArrayImageUpload(e, "posts", index, "image", "/placeholder.svg?height=200&width=300")}
+                      className="flex-1"
+                    />
+                    {post.image && post.image !== "/placeholder.svg?height=200&width=300" && (
+                      <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("posts", index, "image", "/placeholder.svg?height=200&width=300")}>
+                        Remove Image
+                      </Button>
+                    )}
+                  </div>
+                  {post.image && (
+                    <div className="mt-2">
+                      <Image src={post.image || "/placeholder.svg"} alt="Current blog post image preview" width={100} height={60} className="rounded-md object-cover" />
+                    </div>
+                  )}
+                </div>
                 <Input
                   placeholder="Date"
                   value={post.date || ""}

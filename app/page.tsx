@@ -9,27 +9,20 @@ import { SectionLibrary } from "@/components/section-library";
 import { PreviewArea } from "@/components/preview-area";
 import { SectionEditor } from "@/components/section-editor";
 import { Button } from "@/components/ui/button";
-import {
-  Download,
-  Upload,
-  Eye,
-  Code,
-  Plus,
-  Trash2,
-  FileText,
-  Copy,
-  Pencil,
-  BookOpen,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { Download, Upload, Eye, Code, Plus, Trash2, Pencil, Copy, BookOpen, Loader2 } from 'lucide-react';
 import { toast } from "sonner";
 import Joyride, { type CallBackProps, STATUS, type Step } from "react-joyride";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export interface Section {
   id: string;
@@ -43,7 +36,6 @@ export interface Section {
     | "about"
     | "pricing"
     | "contact"
-    | "gallery"
     | "faq"
     | "newsletter"
     | "services"
@@ -60,21 +52,19 @@ export interface Page {
 }
 
 export default function WebsiteBuilder() {
-  const [pages, setPages] = useState<Page[]>([
-    {
-      id: "home",
-      name: "Home",
-      sections: [],
-    },
-  ]);
-  const [currentPageId, setCurrentPageId] = useState<string>("home");
+  const [pages, setPages] = useState<Page[]>([]); // Initialize as empty, will load from localStorage
+  const [currentPageId, setCurrentPageId] = useState<string>(""); // Initialize as empty, will load from localStorage
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isPageManagementOpen, setIsPageManagementOpen] = useState(false);
+  const [pageToRename, setPageToRename] = useState<Page | null>(null);
+  const [newPageName, setNewPageName] = useState("");
 
   // Joyride state
   const [runTour, setRunTour] = useState(false);
   const [isClient, setIsClient] = useState(false); // Add this state variable
+
   const [tourSteps] = useState<Step[]>([
     {
       target: "body",
@@ -88,9 +78,13 @@ export default function WebsiteBuilder() {
       placement: "bottom",
     },
     {
-      target: '[data-tut="page-management-dropdown"]',
-      content:
-        "Manage your pages here: switch between them, rename, duplicate, or delete.",
+      target: '[data-tut="page-select"]',
+      content: "Use this dropdown to switch between your website pages.",
+      placement: "bottom",
+    },
+    {
+      target: '[data-tut="manage-pages-button"]',
+      content: "Open the page management dialog to rename, duplicate, or delete pages.",
       placement: "bottom",
     },
     {
@@ -126,8 +120,9 @@ export default function WebsiteBuilder() {
     },
   ]);
 
+  // Effect to load state from localStorage on initial mount
   useEffect(() => {
-    setIsClient(true);
+    setIsClient(true); // For Joyride
     const hasVisitedBefore = localStorage.getItem("first-time-visit");
     if (hasVisitedBefore === null || hasVisitedBefore === "true") {
       setRunTour(true);
@@ -135,7 +130,50 @@ export default function WebsiteBuilder() {
     } else {
       setRunTour(false);
     }
-  }, []);
+
+    const savedPages = localStorage.getItem("websiteBuilderPages");
+    const savedCurrentPageId = localStorage.getItem("websiteBuilderCurrentPageId");
+
+    if (savedPages) {
+      try {
+        const parsedPages: Page[] = JSON.parse(savedPages);
+        setPages(parsedPages);
+        if (savedCurrentPageId && parsedPages.some(p => p.id === savedCurrentPageId)) {
+          setCurrentPageId(savedCurrentPageId);
+        } else if (parsedPages.length > 0) {
+          setCurrentPageId(parsedPages[0].id);
+        } else {
+          // Fallback if savedPages is empty array
+          setPages([{ id: "home", name: "Home", sections: [] }]);
+          setCurrentPageId("home");
+        }
+      } catch (error) {
+        console.error("Failed to parse saved pages from localStorage", error);
+        // Fallback to default if parsing fails
+        setPages([{ id: "home", name: "Home", sections: [] }]);
+        setCurrentPageId("home");
+      }
+    } else {
+      // No saved pages, initialize with default home page
+      setPages([{ id: "home", name: "Home", sections: [] }]);
+      setCurrentPageId("home");
+    }
+  }, []); // Empty dependency array means it runs once on mount
+
+  // Effect to save pages to localStorage whenever pages state changes
+  useEffect(() => {
+    if (isClient) { // Only save if client-side (after initial load)
+      localStorage.setItem("websiteBuilderPages", JSON.stringify(pages));
+    }
+  }, [pages, isClient]);
+
+  // Effect to save currentPageId to localStorage whenever currentPageId state changes
+  useEffect(() => {
+    if (isClient && currentPageId) { // Only save if client-side and currentPageId is set
+      localStorage.setItem("websiteBuilderCurrentPageId", currentPageId);
+    }
+  }, [currentPageId, isClient]);
+
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status }: any = data;
@@ -265,32 +303,25 @@ export default function WebsiteBuilder() {
     });
   }, [pages.length]);
 
-  const renamePage = useCallback(
-    (pageId: string) => {
-      const pageToRename = pages.find((p) => p.id === pageId);
-      if (pageToRename) {
-        const newName = prompt(
-          `Enter new name for "${pageToRename.name}":`,
-          pageToRename.name
-        );
-        if (newName && newName.trim() !== "") {
-          setPages((prevPages) =>
-            prevPages.map((page) =>
-              page.id === pageId ? { ...page, name: newName.trim() } : page
-            )
-          );
-          toast.success("Page Renamed", {
-            description: `Page "${pageToRename.name}" renamed to "${newName.trim()}".`,
-          });
-        } else if (newName !== null) {
-          toast.error("Rename Failed", {
-            description: "Page name cannot be empty.",
-          });
-        }
-      }
-    },
-    [pages]
-  );
+  const handleRenamePage = useCallback(() => {
+    if (pageToRename && newPageName.trim() !== "") {
+      setPages((prevPages) =>
+        prevPages.map((page) =>
+          page.id === pageToRename.id ? { ...page, name: newPageName.trim() } : page
+        )
+      );
+      toast.success("Page Renamed", {
+        description: `Page "${pageToRename.name}" renamed to "${newPageName.trim()}".`,
+      });
+      setIsPageManagementOpen(false);
+      setPageToRename(null);
+      setNewPageName("");
+    } else if (newPageName.trim() === "") {
+      toast.error("Rename Failed", {
+        description: "Page name cannot be empty.",
+      });
+    }
+  }, [pageToRename, newPageName]);
 
   const duplicatePage = useCallback(
     (pageId: string) => {
@@ -328,7 +359,7 @@ export default function WebsiteBuilder() {
       }
       setPages((prevPages) => prevPages.filter((page) => page.id !== pageId));
       if (currentPageId === pageId) {
-        setCurrentPageId(pages[0].id);
+        setCurrentPageId(pages.filter((p) => p.id !== pageId)[0]?.id || "home");
       }
       toast.error("Page Deleted", {
         description: "The page has been removed from your project.",
@@ -387,8 +418,15 @@ export default function WebsiteBuilder() {
     event.target.value = "";
   }, []);
 
+  // Improved loading state
   if (!currentPage) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-gray-700">
+        <Loader2 className="h-12 w-12 animate-spin text-blue-500 mb-4" />
+        <p className="text-lg font-medium">Loading your website builder...</p>
+        <p className="text-sm text-gray-500">Please wait a moment.</p>
+      </div>
+    );
   }
 
   return (
@@ -424,60 +462,42 @@ export default function WebsiteBuilder() {
               size='sm'
               onClick={addPage}
               className='flex items-center gap-2 bg-transparent'
-              data-tut='add-page-button' // Joyride target
+              data-tut='add-page-button'
             >
               <Plus className='w-4 h-4' />
               Add Page
             </Button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='flex items-center gap-2 bg-transparent'
-                  data-tut='page-management-dropdown' // Joyride target
-                >
-                  <FileText className='w-4 h-4' />
-                  {currentPage.name}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
+            <Select value={currentPageId} onValueChange={setCurrentPageId}>
+              <SelectTrigger className="w-[180px]" data-tut="page-select">
+                <SelectValue placeholder="Select a page" />
+              </SelectTrigger>
+              <SelectContent>
                 {pages.map((page) => (
-                  <DropdownMenuItem
-                    key={page.id}
-                    onClick={() => setCurrentPageId(page.id)}
-                  >
-                    {page.name} {page.id === currentPageId && "(Current)"}
-                  </DropdownMenuItem>
+                  <SelectItem key={page.id} value={page.id}>
+                    {page.name}
+                  </SelectItem>
                 ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => renamePage(currentPageId)}>
-                  <Pencil className='w-4 h-4 mr-2' />
-                  Rename Current Page
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => duplicatePage(currentPageId)}>
-                  <Copy className='w-4 h-4 mr-2' />
-                  Duplicate Current Page
-                </DropdownMenuItem>
-                {pages.length > 1 && (
-                  <DropdownMenuItem
-                    onClick={() => deletePage(currentPageId)}
-                    className='text-red-600'
-                  >
-                    <Trash2 className='w-4 h-4 mr-2' />
-                    Delete Current Page
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </SelectContent>
+            </Select>
+
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => setIsPageManagementOpen(true)}
+              className='flex items-center gap-2 bg-transparent'
+              data-tut='manage-pages-button'
+            >
+              <BookOpen className='w-4 h-4' />
+              Manage Pages
+            </Button>
 
             <Button
               variant='outline'
               size='sm'
               onClick={() => setIsPreviewMode(!isPreviewMode)}
               className='flex items-center gap-2'
-              data-tut='preview-toggle-button' // Joyride target
+              data-tut='preview-toggle-button'
             >
               <Eye className='w-4 h-4' />
               {isPreviewMode ? "Edit" : "Preview"}
@@ -487,7 +507,7 @@ export default function WebsiteBuilder() {
               size='sm'
               onClick={() => fileInputRef.current?.click()}
               className='flex items-center gap-2'
-              data-tut='import-button' // Joyride target
+              data-tut='import-button'
             >
               <Upload className='w-4 h-4' />
               Import
@@ -497,7 +517,7 @@ export default function WebsiteBuilder() {
               size='sm'
               onClick={exportDesign}
               className='flex items-center gap-2 bg-transparent'
-              data-tut='export-button' // Joyride target
+              data-tut='export-button'
             >
               <Download className='w-4 h-4' />
               Export
@@ -555,6 +575,69 @@ export default function WebsiteBuilder() {
           className='hidden'
         />
       </div>
+
+      {/* Page Management Dialog */}
+      <Dialog open={isPageManagementOpen} onOpenChange={setIsPageManagementOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Manage Pages</DialogTitle>
+            <DialogDescription>
+              Rename, duplicate, or delete your website pages.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {pages.map((page) => (
+              <div key={page.id} className="flex items-center gap-2">
+                <Label htmlFor={`page-name-${page.id}`} className="sr-only">
+                  Page Name
+                </Label>
+                <Input
+                  id={`page-name-${page.id}`}
+                  value={page.name}
+                  onChange={(e) => {
+                    // Temporarily update name in UI for immediate feedback
+                    setPages((prev) =>
+                      prev.map((p) =>
+                        p.id === page.id ? { ...p, name: e.target.value } : p
+                      )
+                    );
+                    // Set for actual rename action
+                    setPageToRename(page);
+                    setNewPageName(e.target.value);
+                  }}
+                  onBlur={() => {
+                    if (pageToRename && newPageName.trim() !== pageToRename.name) {
+                      handleRenamePage();
+                    }
+                  }}
+                  className="flex-1"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => duplicatePage(page.id)}
+                  title="Duplicate Page"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+                {pages.length > 1 && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deletePage(page.id)}
+                    title="Delete Page"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsPageManagementOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DndProvider>
   );
 }
@@ -579,11 +662,13 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
       };
     case "hero":
       return {
-        title: "Welcome to Our Amazing Website",
+        title: "Welcome to Abdulaziz' Website Builder",
         subtitle: "We create beautiful experiences that drive results",
         buttonText: "Get Started",
         buttonLink: "#",
         backgroundImage: "/placeholder.svg?height=600&width=1200",
+        buttonBackgroundColor: "#ffffff", // Default button background color
+        buttonTextColor: "#1f2937", // Default button text color
         ...commonProps,
       };
     case "about":
@@ -704,44 +789,7 @@ function getDefaultProps(type: Section["type"]): Record<string, any> {
         backgroundColor: "#f9fafb",
         textColor: "#1f2937",
       };
-    case "gallery":
-      return {
-        title: "Our Work",
-        subtitle: "Take a look at some of our recent projects",
-        images: [
-          {
-            url: "/placeholder.svg?height=300&width=400",
-            alt: "Project 1",
-            title: "Modern Website Design",
-          },
-          {
-            url: "/placeholder.svg?height=300&width=400",
-            alt: "Project 2",
-            title: "E-commerce Platform",
-          },
-          {
-            url: "/placeholder.svg?height=300&width=400",
-            alt: "Project 3",
-            title: "Mobile App Design",
-          },
-          {
-            url: "/placeholder.svg?height=300&width=400",
-            alt: "Project 4",
-            title: "Brand Identity",
-          },
-          {
-            url: "/placeholder.svg?height=300&width=400",
-            alt: "Project 5",
-            title: "Digital Marketing",
-          },
-          {
-            url: "/placeholder.svg?height=300&width=400",
-            alt: "Project 6",
-            title: "Web Application",
-          },
-        ],
-        ...commonProps,
-      };
+      
     case "faq":
       return {
         title: "Frequently Asked Questions",

@@ -16,7 +16,6 @@ interface SectionLibraryProps {
       | "about"
       | "pricing"
       | "contact"
-      | "gallery"
       | "faq"
       | "newsletter"
       | "services"
@@ -88,15 +87,6 @@ const sectionTypes = [
     color: "from-rose-500 to-pink-500",
     bgColor: "bg-rose-50",
     iconColor: "text-rose-600",
-  },
-  {
-    type: "gallery" as const,
-    title: "Gallery",
-    description: "Image gallery or portfolio showcase",
-    icon: ImageIcon,
-    color: "from-violet-500 to-purple-500",
-    bgColor: "bg-violet-50",
-    iconColor: "text-violet-600",
   },
   {
     type: "stats" as const,
@@ -303,20 +293,6 @@ const SectionPreview = ({ type, color }: { type: string; color: string }) => {
                     <div className="w-4 h-0.5 bg-gray-400 rounded-full"></div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    
-    case "gallery":
-      return (
-        <div className={`${baseClasses} bg-gradient-to-br from-gray-100 to-gray-200 p-1.5`}>
-          <div className="grid grid-cols-3 gap-1 h-full">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className={`bg-gradient-to-br ${color} rounded-md shadow-sm relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-white/20"></div>
-                <div className="absolute bottom-0.5 left-0.5 right-0.5 h-1 bg-black/20 rounded-sm"></div>
               </div>
             ))}
           </div>

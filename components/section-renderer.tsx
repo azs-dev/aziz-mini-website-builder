@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import { Check } from "lucide-react"
+import { Check } from 'lucide-react'
 import type { Section } from "@/app/page"
 
 interface SectionRendererProps {
@@ -78,9 +78,10 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
             <div className="absolute inset-0 z-0">
               <Image
                 src={props.backgroundImage || "/placeholder.svg"}
-                alt="Hero background"
+                alt=""
                 fill
                 className="object-cover opacity-20"
+                unoptimized // Added for user-uploaded images
               />
             </div>
           )}
@@ -89,7 +90,7 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
             <p className="text-xl mb-8 opacity-90">{props.subtitle}</p>
             <Button
               size="lg"
-              className="bg-white text-gray-900 hover:bg-gray-100"
+              style={{ backgroundColor: props.buttonBackgroundColor, color: props.buttonTextColor }} // Apply button colors
               onClick={(e) => {
                 if (props.buttonLink) {
                   handleLinkClick(e, props.buttonLink)
@@ -126,7 +127,8 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
                   alt="About us"
                   width={600}
                   height={400}
-                  className="rounded-lg shadow-lg"
+                  className="rounded-lg shadow-lg object-cover" // Added object-cover for better image fitting
+                  unoptimized // Added for user-uploaded images
                 />
               </div>
             </div>
@@ -247,6 +249,7 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
                         width={40}
                         height={40}
                         className="rounded-full"
+                        unoptimized // Added for user-uploaded images
                       />
                       <div>
                         <div className="font-semibold">{testimonial.name}</div>
@@ -255,38 +258,6 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      )
-
-    case "gallery":
-      return (
-        <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {props.images?.map((image: any, index: number) => (
-                <div key={index} className="group cursor-pointer">
-                  <div className="relative overflow-hidden rounded-lg">
-                    <Image
-                      src={image.url || "/placeholder.svg"}
-                      alt={image.alt}
-                      width={400}
-                      height={300}
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
-                      <h3 className="text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                        {image.title}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
               ))}
             </div>
           </div>
@@ -406,6 +377,7 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
                     width={300}
                     height={200}
                     className="w-full h-48 object-cover"
+                    unoptimized // Added for user-uploaded images
                   />
                   <CardContent className="p-6">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
