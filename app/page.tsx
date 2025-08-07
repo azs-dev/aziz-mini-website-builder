@@ -69,54 +69,64 @@ const [isClient, setIsClient] = useState(false);
 const [tourSteps] = useState<Step[]>([
   {
     target: "body",
-    content: "Welcome to the Mini Website Builder! Let's take a quick tour.",
+    title: "Hi, Welcome to Aziz's Mini Website Builder! Let's take a tour.",
+    content: "This serves as my take home exam for the Frontend Engineer position @ Rekaz, Riyadh. 🤞",
     placement: "center",
     disableBeacon: true,
   },
   {
     target: '[data-tut="add-page-button"]',
-    content: "Click here to add a new page to your website.",
+    title: "Click here to add a new page to your website.",
+    content: '',
     placement: "bottom",
   },
   {
     target: '[data-tut="page-select"]',
-    content: "Use this dropdown to switch between your website pages.",
+    title: "Use this dropdown to switch between your website pages.",
+    content: '',
     placement: "bottom",
   },
   {
     target: '[data-tut="manage-pages-button"]',
-    content: "Open the page management dialog to rename, duplicate, or delete pages.",
+    title: "Open the page management dialog to rename, duplicate, or delete pages.",
+    content: '',
     placement: "bottom",
   },
   {
     target: '[data-tut="section-library-sidebar"]',
-    content:
+    title:
       "This is your Section Library. Drag and drop sections from here onto your page.",
+      content: '',
     placement: "right",
   },
   {
     target: '[data-tut="preview-area"]',
-    content: "This is your main canvas. See your website come to life here!",
+    title: "This is your main canvas. See your website come to life here!",
+    content: '',
     placement: "left",
   },
   {
     target: '[data-tut="preview-toggle-button"]',
-    content: "Toggle between Edit mode and Preview mode to see your live site.",
+    title: "Toggle between Edit mode and Preview mode to see your live site.",
+    content: '',
     placement: "bottom",
   },
   {
     target: '[data-tut="import-button"]',
-    content: "Import existing website designs from a JSON file.",
+    title: "Import existing website designs from a JSON file.",
+    content: '',
     placement: "bottom",
   },
   {
     target: '[data-tut="export-button"]',
-    content: "Export your current website design as a JSON file for backup or sharing.",
+    title: "Export your current website design as a JSON file for backup or sharing.",
+    content: '',
     placement: "bottom",
   },
   {
     target: "body",
-    content: "That's it for the tour! Start building your amazing website now.",
+    title: "That's it for the tour! Start building your amazing website now.",
+    content: '',
     placement: "center",
   },
 ]);
@@ -450,12 +460,34 @@ return (
         steps={tourSteps}
         continuous
         showProgress
-        showSkipButton
         callback={handleJoyrideCallback}
         disableOverlayClose={true}
+        locale={{
+          last: 'End Tour',
+        }}
         styles={{
+          tooltipTitle: {
+            fontSize: '20px',
+            fontWeight: 'bold',
+          },
+          tooltipContent: {
+            fontSize: '16px',
+            lineHeight: '25px'
+          },
+          tooltip: {
+            paddingTop: '40px',
+            padding: '25px',
+            borderRadius: '10px',
+          },
+          buttonNext: {
+            padding: '10px',
+            borderRadius: '10px'
+          },
           options: {
+            width: 500,
+            primaryColor: "#3721b5",
             zIndex: 10000,
+            beaconSize: 50,
           },
         }}
       />
@@ -567,7 +599,7 @@ return (
           )}
         </div>
 
-        <div className='flex-1 overflow-auto' data-tut='preview-area'>
+        <div className='flex-1 overflow-auto' >
           {" "}
           <PreviewArea
             sections={currentPage.sections}
@@ -705,8 +737,8 @@ switch (type) {
     };
   case "hero":
     return {
-      title: "Welcome to Our Amazing Website",
-      subtitle: "We create beautiful experiences that drive results",
+      title: "Hello from Mini Website Builder",
+      subtitle: "Build your dream website in minutes",
       buttonText: "Get Started",
       buttonLink: "#",
       backgroundImage: "",
@@ -716,10 +748,10 @@ switch (type) {
     };
   case "about":
     return {
-      title: "About Our Company",
-      subtitle: "We're passionate about creating amazing experiences",
+      title: "About Me",
+      subtitle: "I am Aziz, passionate about creating amazing experiences through technology",
       description:
-        "Founded in 2020, we've been dedicated to delivering exceptional results for our clients. Our team of experts combines creativity with technical expertise to bring your vision to life.",
+        "Graduated in 2020, I've been dedicated to delivering exceptional results with my work. I love combining creativity with technical expertise to help bring visions to life.",
       image: "",
       stats: [
         { number: "500+", label: "Happy Clients" },
@@ -730,8 +762,8 @@ switch (type) {
     };
   case "services":
     return {
-      title: "Our Services",
-      subtitle: "Everything you need to grow your business",
+      title: "Services",
+      subtitle: "Everything you need to in web technology",
       services: [
         {
           title: "Web Development",
@@ -740,16 +772,16 @@ switch (type) {
           features: ["Responsive Design", "Fast Performance", "SEO Optimized"],
         },
         {
-          title: "Digital Marketing",
-          description: "Grow your online presence and reach more customers",
-          icon: "📈",
-          features: ["Social Media", "Content Marketing", "PPC Advertising"],
+          title: "UX Design",
+          description: "Craft intuitive and beautiful experiences that delight your users.",
+          icon: "✨",
+          features: ["User Research", "Wireframing & Prototyping", "Usability Testing"],
         },
         {
-          title: "Consulting",
-          description: "Strategic guidance to help your business succeed",
-          icon: "🎯",
-          features: ["Business Strategy", "Process Optimization", "Growth Planning"],
+          title: "Technology Consulting",
+          description: "Gain a competitive edge with expert guidance on your technology strategy.",
+          icon: "🧠",
+          features: ["Tech Stack Evaluation", "Product Roadmap", "Digital Transformation"],
         },
       ],
       backgroundColor: "#f9fafb",
@@ -757,8 +789,8 @@ switch (type) {
     };
   case "features":
     return {
-      title: "Our Features",
-      subtitle: "Everything you need to succeed",
+      title: "Features",
+      subtitle: "Everything you need to bring your ideas to life",
       features: [
         {
           title: "Fast Performance",
@@ -772,44 +804,44 @@ switch (type) {
     };
   case "pricing":
     return {
-      title: "Choose Your Plan",
-      subtitle: "Simple, transparent pricing that grows with you",
-      plans: [
-        {
-          name: "Starter",
-          price: "$29",
-          period: "month",
-          description: "Perfect for small businesses",
-          features: ["Up to 5 projects", "Basic support", "1GB storage"],
-          popular: false,
-        },
-        {
-          name: "Professional",
-          price: "$79",
-          period: "month",
-          description: "Best for growing companies",
-          features: [
-            "Unlimited projects",
-            "Priority support",
-            "10GB storage",
-            "Advanced analytics",
-          ],
-          popular: true,
-        },
-        {
-          name: "Enterprise",
-          price: "$199",
-          period: "month",
-          description: "For large organizations",
-          features: [
-            "Everything in Pro",
-            "Custom integrations",
-            "Unlimited storage",
-            "Dedicated manager",
-          ],
-          popular: false,
-        },
-      ],
+        "title": "Choose the Perfect Plan",
+        "subtitle": "Simple, transparent pricing designed to grow with your business.",
+        "plans": [
+          {
+            "name": "Hobby",
+            "price": "0",
+            "period": "month",
+            "description": "Ideal for individuals and side projects just getting started.",
+            "features": ["Up to 5 projects", "Community support", "1GB secure storage"],
+            "popular": false
+          },
+          {
+            "name": "Professional",
+            "price": "$79",
+            "period": "month",
+            "description": "The best choice for growing teams and serious projects.",
+            "features": [
+              "Unlimited projects",
+              "Priority support",
+              "10GB secure storage",
+              "Advanced analytics & reporting"
+            ],
+            "popular": true
+          },
+          {
+            "name": "Enterprise",
+            "price": "$199",
+            "period": "month",
+            "description": "Tailored for large organizations with complex needs.",
+            "features": [
+              "All features from Professional",
+              "Custom integrations & SSO",
+              "Unlimited scalable storage",
+              "Dedicated account manager"
+            ],
+            "popular": false,
+          },
+        ],
       ...commonProps,
     };
   case "testimonials":
@@ -817,14 +849,14 @@ switch (type) {
       title: "What Our Customers Say",
       testimonials: [
         {
-          name: "John Doe",
-          role: "CEO, Company",
+          name: "Tim Cook",
+          role: "CEO, Apple",
           content: "Amazing service and great results!",
           avatar: "",
         },
         {
-          name: "Jane Smith",
-          role: "Marketing Director",
+          name: "Bill Gates",
+          role: "COO, Microsoft",
           content: "Exceeded our expectations in every way.",
           avatar: "",
         },
@@ -836,27 +868,20 @@ switch (type) {
     return {
       title: "Frequently Asked Questions",
       subtitle: "Everything you need to know about our services",
-      faqs: [
+      faqs: 
+      [
         {
-          question: "How long does it take to complete a project?",
-          answer:
-            "Project timelines vary depending on complexity, but most projects are completed within 2-6 weeks.",
+          "question": "How long does a typical project take?",
+          "answer": "While timelines can vary by scope, most projects are completed within a efficient 2-6 week timeframe."
         },
         {
-          question: "Do you provide ongoing support?",
-          answer:
-            "Yes, we offer various support packages to ensure your website continues to perform optimally.",
+          "question": "Do you offer ongoing support after launch?",
+          "answer": "Yes, we provide flexible support and maintenance plans to ensure your website remains secure, fast, and up-to-date."
         },
         {
-          question: "Can you work with my existing brand?",
-          answer:
-            "We can work with your existing brand guidelines or help you develop new ones.",
-        },
-        {
-          question: "What technologies do you use?",
-          answer:
-            "We use modern technologies like React, Next.js, and other cutting-edge tools to build fast, reliable websites.",
-        },
+          "question": "What technologies do you specialize in?",
+          "answer": "We build fast and reliable websites using modern technologies, including React, Next.js, and a suite of other cutting-edge tools."
+        }
       ],
       backgroundColor: "#f9fafb",
       textColor: "#1f2937",
@@ -893,44 +918,40 @@ switch (type) {
         "Subscribe to our newsletter and get the latest updates delivered to your inbox",
       placeholder: "Enter your email address",
       buttonText: "Subscribe",
-      backgroundColor: "#3b82f6",
+      backgroundColor: "#11353c",
       textColor: "#ffffff",
     };
   case "blog":
-    return {
-      title: "Latest News & Updates",
-      subtitle: "Stay informed with our latest articles and insights",
-      posts: [
-        {
-          title: "10 Tips for Better Web Design",
-          excerpt:
-            "Learn the essential principles that make websites both beautiful and functional.",
-          image: "",
-          date: "March 15, 2024",
-          author: "John Smith",
-          readTime: "5 min read",
-        },
-        {
-          title: "The Future of Digital Marketing",
-          excerpt:
-            "Explore emerging trends and technologies shaping the digital marketing landscape.",
-          image: "",
-          date: "March 10, 2024",
-          author: "Sarah Johnson",
-          readTime: "8 min read",
-        },
-        {
-          title: "Building Scalable Web Applications",
-          excerpt:
-            "Best practices for creating web applications that can grow with your business.",
-          image: "",
-          date: "March 5, 2024",
-          author: "Mike Davis",
-          readTime: "12 min read",
-        },
-      ],
-      ...commonProps,
-    };
+  return {
+    "title": "Latest News & Updates",
+    "subtitle": "Stay informed with our latest articles and insights.",
+    "posts": [
+      {
+        "title": "Mastering Responsive Design: A Guide for Modern Web Development",
+        "excerpt": "Learn how to create websites that look stunning and perform flawlessly on any device, from desktops to mobile phones.",
+        "image": "",
+        "date": "May 20, 2024",
+        "author": "Jen Simmons",
+        "readTime": "7 min read"
+      },
+      {
+        "title": "Unlocking Performance: The Power of Next.js and Server-Side Rendering",
+        "excerpt": "Dive into the benefits of using Next.js to build lightning-fast web applications with superior user experience and SEO.",
+        "image": "",
+        "date": "May 15, 2024",
+        "author": "Guillermo Rauch",
+        "readTime": "10 min read"
+      },
+      {
+        "title": "The Rise of AI in UX: Designing for Intelligent Interfaces",
+        "excerpt": "Explore how artificial intelligence is transforming user experience design and what it means for the future of digital products.",
+        "image": "",
+        "date": "May 10, 2024",
+        "author": "Don Norman",
+        "readTime": "9 min read"
+      }
+    ]
+  }
   case "cta":
     return {
       title: "Ready to Get Started?",

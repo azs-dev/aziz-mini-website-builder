@@ -123,7 +123,7 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
               <div>
                 <Image
                   src={props.image || "/placeholder.svg"}
-                  alt="About us"
+                  alt="About"
                   width={600}
                   height={400}
                   className="rounded-lg shadow-lg object-cover"
