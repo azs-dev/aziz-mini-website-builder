@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDownIcon } from "lucide-react"
+import { ChevronDownIcon } from 'lucide-react'
 
 import { cn } from "@/lib/utils"
 
@@ -19,7 +19,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("border-b last:border-b-0", className)}
+      className={cn("", className)} // Removed "border-b last:border-b-0"
       {...props}
     />
   )

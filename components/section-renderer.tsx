@@ -51,14 +51,14 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
           style={{ backgroundColor: props.backgroundColor, color: props.textColor }}
         >
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <h1 className="text-xl font-bold">{props.title}</h1>
+            <h1 className="text-xl font-bold break-words">{props.title}</h1> {/* Added break-words */}
             <nav className="hidden md:flex items-center space-x-6">
               {props.navigation?.map((item: { label: string; link: string }, index: number) => (
                 <a
                   key={index}
                   href={item.link}
                   onClick={(e) => handleLinkClick(e, item.link)}
-                  className="hover:opacity-75 transition-opacity"
+                  className="hover:opacity-75 transition-opacity break-words" // Added break-words
                 >
                   {item.label}
                 </a>
@@ -86,8 +86,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
             </div>
           )}
           <div className="relative z-10 max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">{props.title}</h1>
-            <p className="text-xl mb-8 opacity-90">{props.subtitle}</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 break-words">{props.title}</h1> {/* Added break-words */}
+            <p className="text-xl mb-8 opacity-90 break-words">{props.subtitle}</p> {/* Added break-words */}
             <Button
               size="lg"
               style={{ backgroundColor: props.buttonBackgroundColor, color: props.buttonTextColor }} // Apply button colors
@@ -109,14 +109,14 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-                <p className="text-xl mb-6 opacity-75">{props.subtitle}</p>
-                <p className="text-lg leading-relaxed mb-8">{props.description}</p>
+                <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+                <p className="text-xl mb-6 opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
+                <p className="text-lg leading-relaxed mb-8 break-words">{props.description}</p> {/* Added break-words */}
                 <div className="grid grid-cols-3 gap-6">
                   {props.stats?.map((stat: any, index: number) => (
                     <div key={index} className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">{stat.number}</div>
-                      <div className="text-sm opacity-75">{stat.label}</div>
+                      <div className="text-2xl font-bold text-blue-600 break-words">{stat.number}</div> {/* Added break-words */}
+                      <div className="text-sm opacity-75 break-words">{stat.label}</div> {/* Added break-words */}
                     </div>
                   ))}
                 </div>
@@ -141,19 +141,19 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+              <p className="text-xl opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {props.services?.map((service: any, index: number) => (
                 <Card key={index} className="p-6">
                   <CardContent className="p-0">
                     <div className="text-4xl mb-4">{service.icon}</div>
-                    <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                    <p className="text-gray-600 mb-4">{service.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 break-words">{service.title}</h3> {/* Added break-words */}
+                    <p className="text-gray-600 mb-4 break-words">{service.description}</p> {/* Added break-words */}
                     <ul className="space-y-2">
                       {service.features?.map((feature: string, idx: number) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm">
+                        <li key={idx} className="flex items-center gap-2 text-sm break-words"> {/* Added break-words */}
                           <Check className="w-4 h-4 text-green-500" />
                           {feature}
                         </li>
@@ -172,16 +172,16 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+              <p className="text-xl opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {props.features?.map((feature: any, index: number) => (
                 <Card key={index} className="text-center">
                   <CardContent className="p-6">
                     <div className="text-4xl mb-4">{feature.icon}</div>
-                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 break-words">{feature.title}</h3> {/* Added break-words */}
+                    <p className="text-gray-600 break-words">{feature.description}</p> {/* Added break-words */}
                   </CardContent>
                 </Card>
               ))}
@@ -195,8 +195,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+              <p className="text-xl opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {props.plans?.map((plan: any, index: number) => (
@@ -207,15 +207,15 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
                     </Badge>
                   )}
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                    <h3 className="text-xl font-semibold mb-2 break-words">{plan.name}</h3> {/* Added break-words */}
                     <div className="mb-4">
-                      <span className="text-3xl font-bold">{plan.price}</span>
-                      <span className="text-gray-600">/{plan.period}</span>
+                      <span className="text-3xl font-bold break-words">{plan.price}</span> {/* Added break-words */}
+                      <span className="text-gray-600 break-words">/{plan.period}</span> {/* Added break-words */}
                     </div>
-                    <p className="text-gray-600 mb-6">{plan.description}</p>
+                    <p className="text-gray-600 mb-6 break-words">{plan.description}</p> {/* Added break-words */}
                     <ul className="space-y-2 mb-6">
                       {plan.features?.map((feature: string, idx: number) => (
-                        <li key={idx} className="flex items-center gap-2">
+                        <li key={idx} className="flex items-center gap-2 break-words"> {/* Added break-words */}
                           <Check className="w-4 h-4 text-green-500" />
                           {feature}
                         </li>
@@ -236,12 +236,12 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
       return (
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">{props.title}</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 break-words">{props.title}</h2> {/* Added break-words */}
             <div className="grid md:grid-cols-2 gap-8">
               {props.testimonials?.map((testimonial: any, index: number) => (
                 <Card key={index}>
                   <CardContent className="p-6">
-                    <p className="mb-4 italic">"{testimonial.content}"</p>
+                    <p className="mb-4 italic break-words">"{testimonial.content}"</p> {/* Added break-words */}
                     <div className="flex items-center gap-3">
                       <Image
                         src={testimonial.avatar || "/placeholder.svg"}
@@ -252,8 +252,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
                         unoptimized // Added for user-uploaded images
                       />
                       <div>
-                        <div className="font-semibold">{testimonial.name}</div>
-                        <div className="text-sm text-gray-600">{testimonial.role}</div>
+                        <div className="font-semibold break-words">{testimonial.name}</div> {/* Added break-words */}
+                        <div className="text-sm text-gray-600 break-words">{testimonial.role}</div> {/* Added break-words */}
                       </div>
                     </div>
                   </CardContent>
@@ -269,14 +269,14 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+              <p className="text-xl opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
             </div>
             <Accordion type="single" collapsible className="space-y-4">
               {props.faqs?.map((faq: any, index: number) => (
                 <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg px-4">
-                  <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-                  <AccordionContent className="text-gray-600">{faq.answer}</AccordionContent>
+                  <AccordionTrigger className="text-left break-words">{faq.question}</AccordionTrigger> {/* Added break-words */}
+                  <AccordionContent className="text-gray-600 break-words">{faq.answer}</AccordionContent> {/* Added break-words */}
                 </AccordionItem>
               ))}
             </Accordion>
@@ -289,14 +289,14 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
             </div>
             <div className="grid md:grid-cols-4 gap-8">
               {props.stats?.map((stat: any, index: number) => (
                 <div key={index} className="text-center">
                   <div className="text-4xl mb-2">{stat.icon}</div>
-                  <div className="text-3xl font-bold mb-2">{stat.number}</div>
-                  <div className="opacity-75">{stat.label}</div>
+                  <div className="text-3xl font-bold mb-2 break-words">{stat.number}</div> {/* Added break-words */}
+                  <div className="opacity-75 break-words">{stat.label}</div> {/* Added break-words */}
                 </div>
               ))}
             </div>
@@ -309,20 +309,20 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+              <p className="text-xl opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
             </div>
             <div className="grid lg:grid-cols-2 gap-12">
               <div>
-                <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
+                <h3 className="text-xl font-semibold mb-6 break-words">Contact Information</h3> {/* Added break-words */}
                 <div className="space-y-4">
-                  <div>
+                  <div className="break-words">
                     <strong>Email:</strong> {props.contactInfo?.email}
                   </div>
-                  <div>
+                  <div className="break-words">
                     <strong>Phone:</strong> {props.contactInfo?.phone}
                   </div>
-                  <div>
+                  <div className="break-words">
                     <strong>Address:</strong> {props.contactInfo?.address}
                   </div>
                 </div>
@@ -350,8 +350,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
           style={{ backgroundColor: props.backgroundColor, color: props.textColor }}
         >
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-            <p className="text-xl mb-8 opacity-90">{props.subtitle}</p>
+            <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+            <p className="text-xl mb-8 opacity-90 break-words">{props.subtitle}</p> {/* Added break-words */}
             <div className="flex max-w-md mx-auto gap-2">
               <Input placeholder={props.placeholder} className="flex-1" />
               <Button className="bg-white text-gray-900 hover:bg-gray-100">{props.buttonText}</Button>
@@ -365,8 +365,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
         <section className="px-6 py-16" style={{ backgroundColor: props.backgroundColor, color: props.textColor }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-              <p className="text-xl opacity-75">{props.subtitle}</p>
+              <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+              <p className="text-xl opacity-75 break-words">{props.subtitle}</p> {/* Added break-words */}
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {props.posts?.map((post: any, index: number) => (
@@ -380,14 +380,14 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
                     unoptimized // Added for user-uploaded images
                   />
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-2 break-words"> {/* Added break-words */}
                       <span>{post.date}</span>
                       <span>•</span>
                       <span>{post.readTime}</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <div className="text-sm text-gray-600">By {post.author}</div>
+                    <h3 className="text-xl font-semibold mb-2 break-words">{post.title}</h3> {/* Added break-words */}
+                    <p className="text-gray-600 mb-4 break-words">{post.excerpt}</p> {/* Added break-words */}
+                    <div className="text-sm text-gray-600 break-words">By {post.author}</div> {/* Added break-words */}
                   </CardContent>
                 </Card>
               ))}
@@ -403,8 +403,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
           style={{ backgroundColor: props.backgroundColor, color: props.textColor }}
         >
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">{props.title}</h2>
-            <p className="text-xl mb-8 opacity-90">{props.subtitle}</p>
+            <h2 className="text-3xl font-bold mb-4 break-words">{props.title}</h2> {/* Added break-words */}
+            <p className="text-xl mb-8 opacity-90 break-words">{props.subtitle}</p> {/* Added break-words */}
             <Button
               size="lg"
               className="bg-white text-gray-900 hover:bg-gray-100"
@@ -426,8 +426,8 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               <div>
-                <h3 className="text-xl font-bold mb-2">{props.companyName}</h3>
-                <p className="opacity-75">{props.description}</p>
+                <h3 className="text-xl font-bold mb-2 break-words">{props.companyName}</h3> {/* Added break-words */}
+                <p className="opacity-75 break-words">{props.description}</p> {/* Added break-words */}
               </div>
               <div>
                 <div className="flex flex-wrap gap-6">
@@ -436,7 +436,7 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
                     key={index}
                     href={getLinkHref(link.url)} // Use helper function for href
                     onClick={(e) => handleLinkClick(e, link.url)}
-                    className="hover:opacity-75 transition-opacity"
+                    className="hover:opacity-75 transition-opacity break-words" // Added break-words
                   >
                       {link.title}
                     </a>
@@ -445,7 +445,7 @@ export default function SectionRenderer({ section, onNavigateToPage }: SectionRe
               </div>
             </div>
             <div className="border-t border-gray-600 pt-8 text-center opacity-75">
-              <p>&copy; 2024 {props.companyName}. All rights reserved.</p>
+              <p className="break-words">&copy; 2024 {props.companyName}. All rights reserved.</p> {/* Added break-words */}
             </div>
           </div>
         </footer>
