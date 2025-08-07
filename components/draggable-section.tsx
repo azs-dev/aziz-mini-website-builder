@@ -2,9 +2,9 @@
 
 import { useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
-import { SectionRenderer } from "@/components/section-renderer"
+import SectionRenderer from "@/components/section-renderer" // Updated to default import
 import { Button } from "@/components/ui/button"
-import { GripVertical, Settings, Trash2 } from "lucide-react"
+import { GripVertical, Settings, Trash2 } from 'lucide-react'
 import type { Section } from "@/app/page"
 
 interface DraggableSectionProps {
@@ -28,7 +28,7 @@ export function DraggableSection({
 }: DraggableSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
 
-  const [{ isDragging }, drag, preview]: any = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     type: "section",
     item: { index },
     collect: (monitor) => ({
@@ -66,7 +66,7 @@ export function DraggableSection({
 
       {/* Drag Handle */}
       <div
-        ref={drag}
+        ref={drag as any}
         className="absolute left-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity cursor-move"
       >
         <Button size="sm" variant="secondary" className="h-8 w-8 p-0">

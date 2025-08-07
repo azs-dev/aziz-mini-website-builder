@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { useDrop } from "react-dnd"
-import { SectionRenderer } from "@/components/section-renderer"
+import SectionRenderer from "@/components/section-renderer" // Updated to default import
 import { DraggableSection } from "@/components/draggable-section"
 import type { Section } from "@/app/page"
 

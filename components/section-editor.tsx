@@ -210,6 +210,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 />
               )}
             </div>
+            {/* Replaced Background Image URL input with file upload */}
             <div className="flex gap-2 flex-col">
               <Label htmlFor="backgroundImageUpload">Background Image</Label>
               <div className="flex items-center gap-2">
@@ -217,18 +218,18 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                   id="backgroundImageUpload"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleImageUpload(e, "backgroundImage", "/placeholder.svg?height=600&width=1200")}
+                  onChange={(e) => handleImageUpload(e, "backgroundImage", "")} // Changed default placeholder to empty string
                   className="flex-1"
                 />
-                {props.backgroundImage && props.backgroundImage !== "/placeholder.svg?height=600&width=1200" && (
-                  <Button variant="outline" size="sm" onClick={() => handleUpdate("backgroundImage", "/placeholder.svg?height=600&width=1200")}>
+                {props.backgroundImage && ( // Only show remove button if image exists
+                  <Button variant="outline" size="sm" onClick={() => handleUpdate("backgroundImage", "")}> {/* Changed default placeholder to empty string */}
                     Remove Image
                   </Button>
                 )}
               </div>
-              {props.backgroundImage && (
+              {props.backgroundImage && ( // Only show preview if image exists
                 <div className="mt-2">
-                  <Image src={props.backgroundImage || "/placeholder.svg"} alt="" width={100} height={60} className="rounded-md object-cover" />
+                  <Image src={props.backgroundImage || "/placeholder.svg"} alt="Current background image preview" width={100} height={60} className="rounded-md object-cover" unoptimized /> {/* Added unoptimized */}
                 </div>
               )}
             </div>
@@ -392,18 +393,18 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 id="imageUpload"
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleImageUpload(e, "image", "/placeholder.svg?height=400&width=600")}
+                onChange={(e) => handleImageUpload(e, "image", "")} // Changed default placeholder to empty string
                 className="flex-1"
               />
-              {props.image && props.image !== "/placeholder.svg?height=400&width=600" && (
-                <Button variant="outline" size="sm" onClick={() => handleUpdate("image", "/placeholder.svg?height=400&width=600")}>
+              {props.image && ( // Only show remove button if image exists
+                <Button variant="outline" size="sm" onClick={() => handleUpdate("image", "")}> // Changed default placeholder to empty string
                   Remove Image
                 </Button>
               )}
             </div>
-            {props.image && (
+            {props.image && ( // Only show preview if image exists
               <div className="mt-2">
-                <Image src={props.image || "/placeholder.svg"} alt="Current image preview" width={100} height={100} className="rounded-md object-cover" />
+                <Image src={props.image || "/placeholder.svg"} alt="Current image preview" width={100} height={100} className="rounded-md object-cover" unoptimized />
               </div>
             )}
           </div>
@@ -697,18 +698,18 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                       id={`avatarUpload-${index}`}
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleArrayImageUpload(e, "testimonials", index, "avatar", "/placeholder.svg?height=60&width=60")}
+                      onChange={(e) => handleArrayImageUpload(e, "testimonials", index, "avatar", "")} // Changed default placeholder to empty string
                       className="flex-1"
                     />
-                    {testimonial.avatar && testimonial.avatar !== "/placeholder.svg?height=60&width=60" && (
-                      <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("testimonials", index, "avatar", "/placeholder.svg?height=60&width=60")}>
+                    {testimonial.avatar && testimonial.avatar !== "" && ( // Only show remove button if image exists
+                      <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("testimonials", index, "avatar", "")}> // Changed default placeholder to empty string
                         Remove Image
                       </Button>
                     )}
                   </div>
-                  {testimonial.avatar && (
+                  {testimonial.avatar && ( // Only show preview if image exists
                     <div className="mt-2">
-                      <Image src={testimonial.avatar || "/placeholder.svg"} alt="Current avatar preview" width={60} height={60} className="rounded-full object-cover" />
+                      <Image src={testimonial.avatar || "/placeholder.svg"} alt="Current avatar preview" width={60} height={60} className="rounded-full object-cover" unoptimized />
                     </div>
                   )}
                 </div>
@@ -723,7 +724,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                   name: "New Customer",
                   role: "Role",
                   content: "Amazing product!",
-                  avatar: "/placeholder.svg?height=60&width=60",
+                  avatar: "", // Changed to empty string
                 })
               }
             >
@@ -844,18 +845,18 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                       id={`blogImageUpload-${index}`}
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleArrayImageUpload(e, "posts", index, "image", "/placeholder.svg?height=200&width=300")}
+                      onChange={(e) => handleArrayImageUpload(e, "posts", index, "image", "")} // Changed default placeholder to empty string
                       className="flex-1"
                     />
-                    {post.image && post.image !== "/placeholder.svg?height=200&width=300" && (
-                      <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("posts", index, "image", "/placeholder.svg?height=200&width=300")}>
+                    {post.image && post.image !== "" && ( // Only show remove button if image exists
+                      <Button variant="outline" size="sm" onClick={() => handleArrayImageRemove("posts", index, "image", "")}> // Changed default placeholder to empty string
                         Remove Image
                       </Button>
                     )}
                   </div>
-                  {post.image && (
+                  {post.image && ( // Only show preview if image exists
                     <div className="mt-2">
-                      <Image src={post.image || "/placeholder.svg"} alt="Current blog post image preview" width={100} height={60} className="rounded-md object-cover" />
+                      <Image src={post.image || "/placeholder.svg"} alt="Current blog post image preview" width={100} height={60} className="rounded-md object-cover" unoptimized />
                     </div>
                   )}
                 </div>
@@ -884,7 +885,7 @@ export function SectionEditor({ section, onUpdate, onDelete, onClose, pages, onN
                 handleArrayAdd("posts", {
                   title: "New Blog Post",
                   excerpt: "A short summary of the post.",
-                  image: "/placeholder.svg?height=200&width=300",
+                  image: "", // Changed to empty string
                   date: "Month Day, Year",
                   author: "Author Name",
                   readTime: "X min read",

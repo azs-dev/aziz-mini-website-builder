@@ -17,7 +17,7 @@ interface SectionRendererProps {
   onNavigateToPage?: (pageId: string) => void // New prop for page navigation
 }
 
-export function SectionRenderer({ section, onNavigateToPage }: SectionRendererProps) {
+export default function SectionRenderer({ section, onNavigateToPage }: SectionRendererProps) {
   const { type, props } = section
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, link: string) => {
@@ -78,7 +78,7 @@ export function SectionRenderer({ section, onNavigateToPage }: SectionRendererPr
             <div className="absolute inset-0 z-0">
               <Image
                 src={props.backgroundImage || "/placeholder.svg"}
-                alt=""
+                alt="Hero background"
                 fill
                 className="object-cover opacity-20"
                 unoptimized // Added for user-uploaded images
