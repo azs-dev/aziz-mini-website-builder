@@ -3,7 +3,7 @@ Hi!, I'm Aziz learn more about me @: [https://aziz-somandar.vercel.app/](https:/
 
 # Mini Website Builder 🌐
 
-This is a mini website builder developed as a take-home test for a Frontend Engineer position at Rekaz, Riyadh. 
+This is a mini website builder developed as a take-home test.
 
 ---
 
