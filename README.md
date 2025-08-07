@@ -1,9 +1,9 @@
 # Abdulaziz Somandar
-Visit my website @: [https://aziz-somandar.vercel.app/](https://aziz-somandar.vercel.app/)
+Hi!, I'm Aziz learn more about me @: [https://aziz-somandar.vercel.app/](https://aziz-somandar.vercel.app/)
 
 # Mini Website Builder 🌐
 
-This is a mini website builder developed as a take-home test for a Frontend Engineer position at Rekaz, Riyadh. It demonstrates my ability to create a dynamic, interactive web application using a modern and efficient tech stack.
+This is a mini website builder developed as a take-home test for a Frontend Engineer position at Rekaz, Riyadh. 
 
 ---
 
@@ -32,10 +32,3 @@ This is a mini website builder developed as a take-home test for a Frontend Engi
 | **clsx & tailwind-merge** | Utilities for managing CSS class names efficiently. |
 
 ---
-
-### 🤖 AI Tools
-
-| Tool | Description |
-| :--- | :--- |
-| **Claude** | Used as a code verifier to ensure high-quality, error-free code. |
-| **Gemini** | Utilized for spelling and wording checks to maintain clear and professional documentation. |
